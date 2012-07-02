@@ -16,6 +16,6 @@
 [submodule "site-lisp/yasnippet"]
 	path = site-lisp/yasnippet
 	url = https://github.com/capitaomorte/yasnippet.git
-[submodule "js2-mode"]
-	path = js2-mode
+[submodule "site-lisp/js2-mode"]
+	path = site-lisp/js2-mode
 	url = https://github.com/mooz/js2-mode.git
