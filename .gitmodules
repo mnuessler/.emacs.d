@@ -19,3 +19,6 @@
 [submodule "site-lisp/js2-mode"]
 	path = site-lisp/js2-mode
 	url = https://github.com/mooz/js2-mode.git
+[submodule "site-lisp/ido-ubiquitous"]
+	path = site-lisp/ido-ubiquitous
+	url = https://github.com/DarwinAwardWinner/ido-ubiquitous.git
