@@ -28,3 +28,12 @@
 [submodule "site-lisp/dired-plus"]
 	path = site-lisp/dired-plus
 	url = https://github.com/emacsmirror/dired-plus.git
+[submodule "site-lisp/fill-column-indicator"]
+	path = site-lisp/fill-column-indicator
+	url = https://github.com/alpaker/Fill-Column-Indicator.git
+[submodule "site-lisp/php-mode"]
+	path = site-lisp/php-mode
+	url = https://github.com/ejmr/php-mode.git
+[submodule "site-lisp/zencoding-mode"]
+	path = site-lisp/zencoding-mode
+	url = https://github.com/rooney/zencoding.git
