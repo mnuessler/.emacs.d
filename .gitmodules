@@ -25,3 +25,6 @@
 [submodule "site-lisp/smex"]
 	path = site-lisp/smex
 	url = https://github.com/nonsequitur/smex.git
+[submodule "site-lisp/dired-plus"]
+	path = site-lisp/dired-plus
+	url = https://github.com/emacsmirror/dired-plus.git
