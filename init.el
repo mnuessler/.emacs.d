@@ -29,7 +29,7 @@
     (load file)))
 
 ;; Setup extensions
-;;(require 'setup-ido)
+(require 'setup-ido)
 (require 'setup-yasnippet)
 (require 'setup-dired)
 (require 'setup-magit)
@@ -79,12 +79,10 @@
 
 ;; TRAMP
 ;;(if (eq system-type 'darwin)
-(add-to-list 'load-path "~/emacs.d/tramp/lisp/")
 (require 'tramp)
-(add-to-list 'Info-default-directory-list "~/emacs/tramp/info/")
+(add-to-list 'Info-default-directory-list "~/.emacs.d/site-lisp/tramp/info/")
 
 ;; PHP
-(add-to-list 'load-path "~/.emacs.d/php-mode/")
 (require 'php-mode)
 
 ;; Zen-coding
@@ -104,6 +102,13 @@
 
 ;; Ace Jump Mode
 (require 'ace-jump-mode)
+
+;; Thunderbird email with external editor
+(require 'tbemail)
+;;(add-hook 'tbemail-mode-hook 'turn-on-auto-fill)
+
+(require 'thesaurus)
+(setq thesaurus-bhl-api-key "5c4736a087cad9dd0b899b227aa46796")  ;; from registration
 
 ;; Start Emacs server
 (require 'server)
