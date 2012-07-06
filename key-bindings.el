@@ -4,6 +4,10 @@
 ;; Sets `C-c d` to `M-x kill-whole-line`
 (global-set-key "\C-cd" 'kill-whole-line)
 
+;; Mark current word
+;; defined in editing-defuns.el
+(global-set-key "\C-cw" mark-current-word)
+
 ;; org-mode
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
