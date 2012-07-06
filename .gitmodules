@@ -43,3 +43,6 @@
 [submodule "site-lisp/sunrise-commander"]
 	path = site-lisp/sunrise-commander
 	url = https://github.com/escherdragon/sunrise-commander.git
+[submodule "site-lisp/apache-mode"]
+	path = site-lisp/apache-mode
+	url = https://github.com/emacsmirror/apache-mode.git
