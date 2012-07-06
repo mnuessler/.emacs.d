@@ -110,6 +110,10 @@
 (require 'thesaurus)
 (setq thesaurus-bhl-api-key "5c4736a087cad9dd0b899b227aa46796")  ;; from registration
 
+;; Don't highlight text between quotes over multiple lines for properties files
+(add-hook 'conf-javaprop-mode-hook 
+          '(lambda () (conf-quote-normal nil)))
+
 ;; Start Emacs server
 (require 'server)
 (unless (server-running-p)
