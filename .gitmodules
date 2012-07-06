@@ -40,3 +40,6 @@
 [submodule "site-lisp/csv-mode"]
 	path = site-lisp/csv-mode
 	url = https://github.com/emacsmirror/csv-mode.git
+[submodule "site-lisp/sunrise-commander"]
+	path = site-lisp/sunrise-commander
+	url = https://github.com/escherdragon/sunrise-commander.git
