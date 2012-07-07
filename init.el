@@ -44,6 +44,7 @@
 ;;(require 'setup-ace-jump-mode)
 (require 'setup-markdown-mode)
 (require 'setup-org-mode)
+(require 'setup-php-mode)
 
 ;; Fill column indicator
 (require 'fill-column-indicator)
@@ -89,9 +90,6 @@
 ;;(if (eq system-type 'darwin)
 (require 'tramp)
 (add-to-list 'Info-default-directory-list "~/.emacs.d/site-lisp/tramp/info/")
-
-;; PHP
-(require 'php-mode)
 
 ;; Zen-coding
 (require 'zencoding-mode)

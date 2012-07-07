@@ -48,5 +48,7 @@
 ;; Find file in project
 (global-set-key (kbd "C-x f") 'find-file-in-project)
 
-(provide 'key-bindings)
+;; php-mode
+(define-key php-mode-map (kbd "RET") 'newline-and-indent)
 
+(provide 'key-bindings)
