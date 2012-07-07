@@ -43,8 +43,9 @@
 (autoload 'taskjugger-mode "taskjuggler-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.tjp\\'" . taskjugger-mode))
 
-(autoload 'csv-mode "csv-mode
+(autoload 'csv-mode "csv-mode"
   "Major mode for editing comma-separated value files." t)
 (add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
 
 (provide 'mode-mappings)
+
