@@ -8,7 +8,7 @@
  '(csv-separators (quote (",")))
  '(erc-nick "mnuessler")
  '(erc-server "irc.iscout.local")
- '(erc-user-full-name "Matthias Nuessler"))
+ '(erc-user-full-name "Matthias Nuessler")
  '(LaTeX-command "/usr/texbin/pdflatex -synctex=1")
  '(inhibit-startup-screen t)
  '(ispell-program-name "/sw/bin/ispell")
