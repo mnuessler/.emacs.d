@@ -58,3 +58,6 @@
 [submodule "site-lisp/groovy-mode"]
 	path = site-lisp/groovy-mode
 	url = https://github.com/emacsmirror/groovy-mode.git
+[submodule "snippets"]
+	path = snippets
+	url = git@github.com:mnuessler/snippets.git
