@@ -6,7 +6,7 @@
 
 ;; Mark current word
 ;; defined in editing-defuns.el
-(global-set-key "\C-cw" mark-current-word)
+(global-set-key "\C-cw" 'mark-current-word)
 
 ;; org-mode
 (global-set-key "\C-cl" 'org-store-link)
