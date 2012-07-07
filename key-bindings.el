@@ -45,5 +45,8 @@
 ;; This is your old M-x.
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
+;; Find file in project
+(global-set-key (kbd "C-x f") 'find-file-in-project)
+
 (provide 'key-bindings)
 

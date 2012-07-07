@@ -52,3 +52,6 @@
 [submodule "site-lisp/tbemail"]
 	path = site-lisp/tbemail
 	url = https://github.com/emacsmirror/tbemail.git
+[submodule "site-lisp/find-file-in-project"]
+	path = site-lisp/find-file-in-project
+	url = https://github.com/technomancy/find-file-in-project.git
