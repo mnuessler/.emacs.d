@@ -128,6 +128,10 @@
 (add-to-list 'auto-mode-alist '("access\\.conf\\'" . apache-mode))
 (add-to-list 'auto-mode-alist '("sites-\\(available\\|enabled\\)/" . apache-mode))
 
+;; Taskjuggler mode
+(autoload 'taskjugger-mode "taskjuggler-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.tjp\\'" . taskjugger-mode))
+
 ;; Start Emacs server
 (require 'server)
 (unless (server-running-p)

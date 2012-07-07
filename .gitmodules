@@ -46,3 +46,9 @@
 [submodule "site-lisp/apache-mode"]
 	path = site-lisp/apache-mode
 	url = https://github.com/emacsmirror/apache-mode.git
+[submodule "site-lisp/taskjuggler-mode"]
+	path = site-lisp/taskjuggler-mode
+	url = https://github.com/emacsmirror/taskjuggler-mode.git
+[submodule "site-lisp/tbemail"]
+	path = site-lisp/tbemail
+	url = https://github.com/emacsmirror/tbemail.git
