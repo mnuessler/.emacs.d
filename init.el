@@ -14,6 +14,10 @@
   (when (file-directory-p project)
     (add-to-list 'load-path project)))
 
+;; Write backup files to own directory
+(setq backup-directory-alist `(("." . ,(expand-file-name
+                                        (concat dotfiles-dir "backups")))))
+
 ;; Save point position between sessions
 (require 'saveplace)
 (setq-default save-place t)
