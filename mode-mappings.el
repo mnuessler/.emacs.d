@@ -28,6 +28,23 @@
 ;; Snippets
 (add-to-list 'auto-mode-alist '("yasnippet/snippets" . snippet-mode))
 
+;; js2-mode
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
+;; Apache mode
+(autoload 'apache-mode "apache-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.htaccess\\'" . apache-mode))
+(add-to-list 'auto-mode-alist '("httpd\\.conf\\'" . apache-mode))
+(add-to-list 'auto-mode-alist '("srm\\.conf\\'" . apache-mode))
+(add-to-list 'auto-mode-alist '("access\\.conf\\'" . apache-mode))
+(add-to-list 'auto-mode-alist '("sites-\\(available\\|enabled\\)/" . apache-mode))
+
+;; Taskjuggler mode
+(autoload 'taskjugger-mode "taskjuggler-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.tjp\\'" . taskjugger-mode))
+
+(autoload 'csv-mode "csv-mode
+  "Major mode for editing comma-separated value files." t)
+(add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
 
 (provide 'mode-mappings)

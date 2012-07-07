@@ -103,9 +103,6 @@
 ;; Mark multiple
 (require 'inline-string-rectangle)
 
-;; js2-mode
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-
 (require 'mark-more-like-this)
 
 ;; Ace Jump Mode
@@ -115,6 +112,7 @@
 (require 'tbemail)
 ;;(add-hook 'tbemail-mode-hook 'turn-on-auto-fill)
 
+;; Thesaurus
 (require 'thesaurus)
 (setq thesaurus-bhl-api-key "5c4736a087cad9dd0b899b227aa46796")  ;; from registration
 
@@ -122,23 +120,7 @@
 (add-hook 'conf-javaprop-mode-hook 
           '(lambda () (conf-quote-normal nil)))
 
-(add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
-(autoload 'csv-mode "csv-mode"
-  "Major mode for editing comma-separated value files." t)
-
 (require 'sunrise-commander)
-
-;; Apache mode
-(autoload 'apache-mode "apache-mode" nil t)
-(add-to-list 'auto-mode-alist '("\\.htaccess\\'" . apache-mode))
-(add-to-list 'auto-mode-alist '("httpd\\.conf\\'" . apache-mode))
-(add-to-list 'auto-mode-alist '("srm\\.conf\\'" . apache-mode))
-(add-to-list 'auto-mode-alist '("access\\.conf\\'" . apache-mode))
-(add-to-list 'auto-mode-alist '("sites-\\(available\\|enabled\\)/" . apache-mode))
-
-;; Taskjuggler mode
-(autoload 'taskjugger-mode "taskjuggler-mode" nil t)
-(add-to-list 'auto-mode-alist '("\\.tjp\\'" . taskjugger-mode))
 
 ;; Start Emacs server
 (require 'server)
