@@ -120,6 +120,18 @@
 
 (require 'sunrise-commander)
 
+;; Annoying arrows mode
+(require 'annoying-arrows-mode)
+(global-annoying-arrows-mode)
+;; Use visible bell instead of beep
+(setq visible-bell 1)
+;; Turn off bell completely
+;;(setq ring-bell-function 'ignore)
+
+;; Show matching parenthesis, bracket or brace for the character at point.
+(setq show-paren-mode t)
+(setq show-paren-delay 0)
+
 ;; Start Emacs server
 (require 'server)
 (unless (server-running-p)

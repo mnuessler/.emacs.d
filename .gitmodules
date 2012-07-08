@@ -61,3 +61,9 @@
 [submodule "snippets"]
 	path = snippets
 	url = git@github.com:mnuessler/snippets.git
+[submodule "site-lisp/annoying-arrows-mode"]
+	path = site-lisp/annoying-arrows-mode
+	url = https://github.com/magnars/annoying-arrows-mode.el.git
+[submodule "themes/zenburn-theme"]
+	path = themes/zenburn-theme
+	url = https://github.com/emacsmirror/zenburn-theme.git
