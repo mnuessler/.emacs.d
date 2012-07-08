@@ -1,10 +1,16 @@
 ;; Adjust frame size
 (if (window-system)
-    (set-frame-size (selected-frame) 100 60))
+    (set-frame-size (selected-frame) 100 70))
 
-;; Display line number and column number
+;; Display line and column numbers
 (setq line-number-mode t)
 (setq column-number-mode t)
+
+;; Highlight current line
+(global-hl-line-mode 1)
+;; No scroll bars and no tool bar
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
 
 ;; Built-in theming support available starting with Emacs 24
 ;;(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
@@ -13,18 +19,15 @@
 ;; Collection of color themes
 ;; Screenshots of available themes at
 ;; http://gnuemacscolorthemetest.googlecode.com/svn/html/index-el.html
-(require 'color-theme)
-(eval-after-load "color-theme"
-  '(progn
-     (color-theme-initialize)
-     (color-theme-comidia)))
+(if (window-system)
+    (progn
+      (require 'color-theme)
+      (eval-after-load "color-theme"
+	'(progn
+	   (color-theme-initialize)
+	   (color-theme-comidia)))))
 
 ;; Whitespace, configured via Custom
 (require 'whitespace)
-
-;; Use bleeding edge org-mode cloned instead of bundled version
-(setq load-path (cons "~/.emacs.d/org-mode/lisp" load-path))
-(setq load-path (cons "~/.emacs.d/org-mode/contrib/lisp" load-path))
-(require 'org-install)
 
 (provide 'appearance)

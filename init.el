@@ -27,7 +27,7 @@
 (setq-default save-place t)
 (setq save-place-file (expand-file-name ".places" dotfiles-dir))
 
-; Are we on a mac?
+;; Are we on a mac?
 (setq is-mac (equal system-type 'darwin))
 
 ;; Functions (load all files in defuns-dir)
@@ -117,7 +117,7 @@
 (setq thesaurus-bhl-api-key "5c4736a087cad9dd0b899b227aa46796")  ;; from registration
 
 ;; Don't highlight text between quotes over multiple lines for properties files
-(add-hook 'conf-javaprop-mode-hook 
+(add-hook 'conf-javaprop-mode-hook
           '(lambda () (conf-quote-normal nil)))
 
 (require 'sunrise-commander)
@@ -127,7 +127,7 @@
 (global-annoying-arrows-mode)
 ;; Use visible bell instead of beep
 (setq visible-bell 1)
-;; Turn off bell completely
+;; or turn off bell completely
 ;;(setq ring-bell-function 'ignore)
 
 ;; Show matching parenthesis, bracket or brace for the character at point.
