@@ -10,7 +10,8 @@
 ;;   (c-set-offset 'arglist-cont 0)
 ;;   (c-set-offset 'arglist-intro '+)
 ;;   (c-set-offset 'case-label 4)
-;;   (c-set-offset 'arglist-close 0))
+;;   (c-set-offset 'arglist-close 0)
+   )
 (add-hook 'php-mode-hook 'wicked/php-mode-init)
 
 (provide 'setup-php-mode)

@@ -103,6 +103,8 @@
 
 (require 'mark-more-like-this)
 
+(require 'find-file-in-project)
+
 ;; Ace Jump Mode
 (require 'ace-jump-mode)
 

@@ -18,6 +18,7 @@
 
 ;; expand region
 (global-set-key (kbd "C-=") 'er/expand-region)
+(global-set-key (kbd "C-+") 'er/contract-region)
 
 ;; replace the original string-rectangle binding
 ;; by the inline version from mark-multiple
@@ -49,6 +50,6 @@
 (global-set-key (kbd "C-x f") 'find-file-in-project)
 
 ;; php-mode
-(define-key php-mode-map (kbd "RET") 'newline-and-indent)
+;;(define-key php-mode-map (kbd "RET") 'newline-and-indent)
 
 (provide 'key-bindings)
