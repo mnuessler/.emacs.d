@@ -11,11 +11,16 @@
 ;;(load-theme 'zenburn t)
 
 ;; Collection of color themes
+;; Screenshots of available themes at
+;; http://gnuemacscolorthemetest.googlecode.com/svn/html/index-el.html
 (require 'color-theme)
 (eval-after-load "color-theme"
   '(progn
      (color-theme-initialize)
      (color-theme-comidia)))
+
+;; Whitespace, configured via Custom
+(require 'whitespace)
 
 ;; Use bleeding edge org-mode cloned instead of bundled version
 (setq load-path (cons "~/.emacs.d/org-mode/lisp" load-path))

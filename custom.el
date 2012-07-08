@@ -7,10 +7,12 @@
   ;; If there is more than one, they won't work right.
  '(LaTeX-command "/usr/texbin/pdflatex -synctex=1")
  '(browse-url-browser-function (quote browse-url-text-emacs))
+ '(confirm-kill-emacs (quote y-or-n-p))
  '(csv-separators (quote (",")))
  '(erc-nick "mnuessler")
  '(erc-server "irc.iscout.local")
  '(erc-user-full-name "Matthias Nuessler")
+ '(global-whitespace-mode t)
  '(inhibit-startup-screen t)
  '(ispell-program-name "/sw/bin/ispell")
  '(latex-run-command "/usr/texbin/pdflatex -synctex=1")
@@ -18,7 +20,8 @@
  '(php-manual-path "~/opt/php-manual")
  '(php-mode-speedbar-open nil)
  '(save-place t nil (saveplace))
- '(show-paren-mode t))
+ '(show-paren-mode t)
+ '(whitespace-style (quote (trailing space-before-tab empty))))
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
