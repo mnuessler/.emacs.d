@@ -27,6 +27,7 @@
 
 ;; Snippets
 (add-to-list 'auto-mode-alist '("yasnippet/snippets" . snippet-mode))
+(add-to-list 'auto-mode-alist '("\\.emacs.d/snippets" . snippet-mode))
 
 ;; js2-mode
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
