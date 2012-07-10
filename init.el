@@ -134,6 +134,9 @@
 (setq show-paren-mode t)
 (setq show-paren-delay 0)
 
+(require 'shell-command)
+(shell-command-completion-mode)
+
 ;; Start Emacs server
 (require 'server)
 (unless (server-running-p)
