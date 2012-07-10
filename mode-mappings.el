@@ -43,9 +43,15 @@
 (autoload 'taskjugger-mode "taskjuggler-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.tjp\\'" . taskjugger-mode))
 
+;; csv-mode
 (autoload 'csv-mode "csv-mode"
   "Major mode for editing comma-separated value files." t)
 (add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
 
-(provide 'mode-mappings)
+;; disable auto-fill when using Firefox add-on "It's All Text!"
+(add-hook 'text-mode-hook
+	  (lambda ()
+	    (when (string-match "/itsalltext/" (buffer-file-name))
+	      (turn-off-auto-fill))))
 
+(provide 'mode-mappings)

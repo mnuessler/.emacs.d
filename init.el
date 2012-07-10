@@ -110,7 +110,7 @@
 
 ;; Thunderbird email with external editor
 (require 'tbemail)
-;;(add-hook 'tbemail-mode-hook 'turn-on-auto-fill)
+(add-hook 'tbemail-mode-hook 'turn-off-auto-fill)
 
 ;; Thesaurus
 (require 'thesaurus)
