@@ -9,9 +9,10 @@
 (setq line-number-mode t)
 (setq column-number-mode t)
 
-;; Highlight current line
-(require 'hl-line+)
-(toggle-hl-line-when-idle 1)
+;; Highlight current line and column when idle
+;; Requires dependencies hl-line+.el vline.el col-highlight.el
+(require 'crosshairs)
+(toggle-crosshairs-when-idle 1)
 
 ;; No scroll bars and no tool bar
 (scroll-bar-mode -1)
