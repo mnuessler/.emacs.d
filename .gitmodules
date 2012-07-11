@@ -67,6 +67,3 @@
 [submodule "themes/zenburn-theme"]
 	path = themes/zenburn-theme
 	url = https://github.com/emacsmirror/zenburn-theme.git
-[submodule "site-lisp/auctex"]
-	path = site-lisp/auctex
-	url = https://github.com/emacsmirror/auctex.git
