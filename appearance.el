@@ -2,12 +2,17 @@
 (if (window-system)
     (set-frame-size (selected-frame) 100 70))
 
+;; No blinking cursor
+(blink-cursor-mode 0)
+
 ;; Display line and column numbers
 (setq line-number-mode t)
 (setq column-number-mode t)
 
 ;; Highlight current line
-(global-hl-line-mode 1)
+(require 'hl-line+)
+(toggle-hl-line-when-idle 1)
+
 ;; No scroll bars and no tool bar
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
