@@ -15,12 +15,14 @@
  '(global-whitespace-mode t)
  '(inhibit-startup-screen t)
  '(ispell-program-name "/sw/bin/ispell")
+ '(jira-url "https://jira")
  '(latex-run-command "/usr/texbin/pdflatex -synctex=1")
  '(php-completion-file "~/.emacs.d/auxiliary-files/php-mode/php-functions.txt")
  '(php-manual-path "~/opt/php-manual")
  '(php-mode-speedbar-open nil)
  '(save-place t nil (saveplace))
  '(show-paren-mode t)
+ '(sql-oracle-program "sqlplus64")
  '(whitespace-style (quote (trailing space-before-tab empty))))
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
