@@ -2,12 +2,18 @@
 (if (window-system)
     (set-frame-size (selected-frame) 100 70))
 
+;; No blinking cursor
+(blink-cursor-mode 0)
+
 ;; Display line and column numbers
 (setq line-number-mode t)
 (setq column-number-mode t)
 
-;; Highlight current line
-(global-hl-line-mode 1)
+;; Highlight current line and column when idle
+;; Requires dependencies hl-line+.el vline.el col-highlight.el
+(require 'crosshairs)
+(toggle-crosshairs-when-idle 1)
+
 ;; No scroll bars and no tool bar
 (scroll-bar-mode -1)
 (tool-bar-mode -1)

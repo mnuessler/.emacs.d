@@ -5,6 +5,11 @@
 (setq org-indent-mode t)
 (add-hook 'org-mode-hook 'turn-on-font-lock) ; not needed when global-font-lock-mode is on
 
+(add-hook 'org-mode-hook (lambda()
+	  (progn
+	    (toggle-crosshairs-when-idle 0)
+	    (toggle-hl-line-when-idle 1))))
+
 ;; Log time when closing TODO items
 (setq org-log-done 'time)
 ;;(setq org-log-done 'note)
@@ -30,7 +35,7 @@
 (setq org-mobile-inbox-for-pull "~/Dropbox/org/inbox.org")
 ;; Set to <your Dropbox root directory>/MobileOrg.
 (setq org-mobile-directory "~/Dropbox/MobileOrg")
-(setq org-agenda-files 
+(setq org-agenda-files
       '("~/Dropbox/org/private.org"
 	"~/Dropbox/org/dev.org"
 	"~/Dropbox/org/quotations.org"))

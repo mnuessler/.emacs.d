@@ -84,6 +84,7 @@
 
 (require 'diminish)
 (diminish 'yas/minor-mode)
+(diminish 'global-whitespace-mode)
 ;;(eval-after-load "filladapt" '(diminish 'filladapt-mode))
 
 ;; TRAMP
