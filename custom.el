@@ -6,7 +6,7 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(LaTeX-command "/usr/texbin/pdflatex -synctex=1")
- '(browse-url-browser-function (quote browse-url-text-emacs))
+ '(browse-url-browser-function (quote browse-url-choose-browser))
  '(confirm-kill-emacs (quote y-or-n-p))
  '(csv-separators (quote (",")))
  '(erc-nick "mnuessler")

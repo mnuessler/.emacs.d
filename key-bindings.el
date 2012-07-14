@@ -52,4 +52,6 @@
 ;; php-mode
 ;;(define-key php-mode-map (kbd "RET") 'newline-and-indent)
 
+(global-set-key "\C-cz" 'show-file-name)
+
 (provide 'key-bindings)
