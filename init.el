@@ -168,6 +168,10 @@
         (ansi-term term-cmd)))))
 (global-set-key (kbd "<f2>") 'visit-ansi-term)
 
+;; make script files executable automatically
+;; source: http://www.masteringemacs.org/articles/2011/01/19/script-files-executable-automatically/
+(add-hook 'after-save-hook
+	  'executable-make-buffer-file-executable-if-script-p)
 
 ;; Start Emacs server
 (require 'server)
