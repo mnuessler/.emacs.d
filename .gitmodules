@@ -73,3 +73,6 @@
 [submodule "site-lisp/markdown-mode"]
 	path = site-lisp/markdown-mode
 	url = git://jblevins.org/git/markdown-mode.git
+[submodule "site-lisp/ruby-end"]
+	path = site-lisp/ruby-end
+	url = https://github.com/rejeep/ruby-end.git

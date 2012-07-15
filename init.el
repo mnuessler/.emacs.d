@@ -45,6 +45,7 @@
 (require 'setup-markdown-mode)
 (require 'setup-org-mode)
 (require 'setup-php-mode)
+(require 'ruby-end)
 (require 'eproject)
 (require 'eproject-extras)
 

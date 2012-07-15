@@ -6,4 +6,3 @@
 (add-to-list 'exec-path "/sw/bin")
 
 (provide 'mac)
-
