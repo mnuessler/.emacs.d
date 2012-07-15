@@ -9,6 +9,7 @@
  '(browse-url-browser-function (quote browse-url-choose-browser))
  '(confirm-kill-emacs (quote y-or-n-p))
  '(csv-separators (quote (",")))
+ '(eproject-completing-read-function (quote eproject--ido-completing-read))
  '(erc-nick "mnuessler")
  '(erc-server "irc.iscout.local")
  '(erc-user-full-name "Matthias Nuessler")

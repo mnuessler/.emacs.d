@@ -67,3 +67,6 @@
 [submodule "themes/zenburn-theme"]
 	path = themes/zenburn-theme
 	url = https://github.com/emacsmirror/zenburn-theme.git
+[submodule "site-lisp/eproject"]
+	path = site-lisp/eproject
+	url = https://github.com/jrockway/eproject.git
