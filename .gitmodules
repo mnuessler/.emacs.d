@@ -76,3 +76,6 @@
 [submodule "site-lisp/ruby-end"]
 	path = site-lisp/ruby-end
 	url = https://github.com/rejeep/ruby-end.git
+[submodule "site-lisp/jira-markup-mode"]
+	path = site-lisp/jira-markup-mode
+	url = git@github.com:mnuessler/jira-markup-mode.git

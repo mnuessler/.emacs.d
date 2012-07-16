@@ -48,6 +48,7 @@
 (require 'ruby-end)
 (require 'eproject)
 (require 'eproject-extras)
+(require 'jira-markup-mode)
 
 ;; Fill column indicator
 (require 'fill-column-indicator)
