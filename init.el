@@ -49,6 +49,8 @@
 (require 'eproject)
 (require 'eproject-extras)
 (require 'jira-markup-mode)
+(require 'drag-stuff)
+(drag-stuff-mode t)
 
 ;; Fill column indicator
 (require 'fill-column-indicator)
@@ -89,6 +91,7 @@
 (require 'diminish)
 (diminish 'yas/minor-mode)
 (diminish 'global-whitespace-mode)
+(diminish 'drag-stuff-mode)
 ;;(eval-after-load "filladapt" '(diminish 'filladapt-mode))
 
 ;; TRAMP
