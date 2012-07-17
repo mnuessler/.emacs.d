@@ -51,6 +51,7 @@
 (require 'jira-markup-mode)
 (require 'drag-stuff)
 (drag-stuff-mode t)
+(require 'psvn)
 
 ;; Fill column indicator
 (require 'fill-column-indicator)
