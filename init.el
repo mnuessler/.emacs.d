@@ -49,9 +49,14 @@
 (require 'eproject)
 (require 'eproject-extras)
 (require 'jira-markup-mode)
-(require 'drag-stuff)
-(drag-stuff-mode t)
 (require 'psvn)
+
+;; drag stuff
+;; turn it on globally, except listed modes
+(require 'drag-stuff)
+(drag-stuff-global-mode t)
+(add-to-list 'drag-stuff-except-modes 'conflicting-mode)
+(add-to-list 'drag-stuff-except-modes 'dired-mode)
 
 ;; Fill column indicator
 (require 'fill-column-indicator)
