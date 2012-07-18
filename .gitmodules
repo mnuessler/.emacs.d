@@ -82,3 +82,6 @@
 [submodule "site-lisp/drag-stuff"]
 	path = site-lisp/drag-stuff
 	url = https://github.com/rejeep/drag-stuff.git
+[submodule "site-lisp/camelcase-mode"]
+	path = site-lisp/camelcase-mode
+	url = https://github.com/emacsmirror/camelcase-mode.git
