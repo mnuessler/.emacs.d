@@ -188,6 +188,10 @@
 (add-hook 'after-save-hook
 	  'executable-make-buffer-file-executable-if-script-p)
 
+;; assigns a number to each window, so you can reach any window with just one command (M-1 … M-0)
+(require 'window-numbering)
+(window-numbering-mode 1)
+
 ;; Start Emacs server
 (require 'server)
 (unless (server-running-p)
