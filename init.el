@@ -52,6 +52,13 @@
 (require 'eproject-extras)
 (require 'jira-markup-mode)
 (require 'psvn)
+;; relative fringe: display the buffer-relative positions of flymake
+;; errors and warnings on the fringe
+(require 'rfringe)
+;; Make flymake error messages appear in the minibuffer when point is
+;; on a line containing a flymake error. This saves having to mouse
+;; over the error, which is a keyboard user's annoyance.
+(require 'flymake-cursor)
 
 ;; drag stuff
 ;; turn it on globally, except listed modes
