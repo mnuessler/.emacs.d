@@ -66,6 +66,7 @@
 (drag-stuff-global-mode t)
 (add-to-list 'drag-stuff-except-modes 'conflicting-mode)
 (add-to-list 'drag-stuff-except-modes 'dired-mode)
+(add-to-list 'drag-stuff-except-modes 'org-mode)
 
 ;; Fill column indicator
 (require 'fill-column-indicator)
@@ -147,7 +148,7 @@
 
 ;; Annoying arrows mode
 (require 'annoying-arrows-mode)
-(global-annoying-arrows-mode)
+(global-annoying-arrows-mode 1)
 ;; Use visible bell instead of beep
 (setq visible-bell 1)
 ;; or turn off bell completely
