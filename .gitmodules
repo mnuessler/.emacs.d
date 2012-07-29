@@ -85,3 +85,6 @@
 [submodule "site-lisp/camelcase-mode"]
 	path = site-lisp/camelcase-mode
 	url = https://github.com/emacsmirror/camelcase-mode.git
+[submodule "site-lisp/python-mode"]
+	path = site-lisp/python-mode
+	url = https://github.com/emacsmirror/python-mode.git
