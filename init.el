@@ -49,6 +49,10 @@
 (require 'setup-test-case-mode)
 (require 'setup-python-mode)
 (require 'ruby-end)
+(require 'rvm)
+;; use rvm's default Ruby for the current Emacs session
+(rvm-use-default)
+(require 'rhtml-mode) 
 (require 'eproject)
 (require 'eproject-extras)
 (require 'jira-markup-mode)

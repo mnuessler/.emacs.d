@@ -91,3 +91,9 @@
 [submodule "site-lisp/highlight-indentation-mode"]
 	path = site-lisp/highlight-indentation-mode
 	url = https://github.com/antonj/Highlight-Indentation-for-Emacs.git
+[submodule "site-lisp/rvm"]
+	path = site-lisp/rvm
+	url = https://github.com/djwhitt/rvm.el.git
+[submodule "site-lisp/rhtml-mode"]
+	path = site-lisp/rhtml-mode
+	url = https://github.com/eschulte/rhtml.git
