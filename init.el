@@ -52,7 +52,8 @@
 (require 'rvm)
 ;; use rvm's default Ruby for the current Emacs session
 (rvm-use-default)
-(require 'rhtml-mode) 
+(require 'rhtml-mode)
+(require 'yaml-mode) 
 (require 'eproject)
 (require 'eproject-extras)
 (require 'jira-markup-mode)
