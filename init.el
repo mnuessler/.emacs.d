@@ -47,6 +47,7 @@
 (require 'setup-php-mode)
 (require 'setup-java-mode)
 (require 'setup-test-case-mode)
+(require 'setup-python-mode)
 (require 'ruby-end)
 (require 'eproject)
 (require 'eproject-extras)
