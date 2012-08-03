@@ -60,6 +60,7 @@
 ;; over the error, which is a keyboard user's annoyance.
 (require 'flymake-cursor)
 (require 'python-mode)
+(require 'highlight-indentation)
 
 ;; drag stuff
 ;; turn it on globally, except listed modes

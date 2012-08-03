@@ -88,3 +88,6 @@
 [submodule "site-lisp/python-mode"]
 	path = site-lisp/python-mode
 	url = https://github.com/emacsmirror/python-mode.git
+[submodule "site-lisp/highlight-indentation-mode"]
+	path = site-lisp/highlight-indentation-mode
+	url = https://github.com/antonj/Highlight-Indentation-for-Emacs.git
