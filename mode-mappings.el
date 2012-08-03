@@ -50,6 +50,9 @@
 (add-to-list 'auto-mode-alist '("\\.confluence$" . jira-markup-mode))
 (add-to-list 'auto-mode-alist '("/itsalltext/.*jira.*\\.txt$" . jira-markup-mode))
 
+;; yaml-mode
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+
 ;; disable auto-fill when using Firefox add-on "It's All Text!"
 (add-hook 'text-mode-hook
 	  (lambda ()

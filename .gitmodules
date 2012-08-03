@@ -97,3 +97,6 @@
 [submodule "site-lisp/rhtml-mode"]
 	path = site-lisp/rhtml-mode
 	url = https://github.com/eschulte/rhtml.git
+[submodule "site-lisp/yaml-mode"]
+	path = site-lisp/yaml-mode
+	url = http://github.com/yoshiki/yaml-mode.git
