@@ -68,6 +68,9 @@
 (require 'python-mode)
 (require 'highlight-indentation)
 (require 'smooth-scrolling)
+(require 'browse-kill-ring)
+;; make M-y to use browse-kill-ring
+(browse-kill-ring-default-keybindings)
 
 ;; drag stuff
 ;; turn it on globally, except listed modes
