@@ -106,3 +106,6 @@
 [submodule "site-lisp/wrap-region"]
 	path = site-lisp/wrap-region
 	url = https://github.com/rejeep/wrap-region.git
+[submodule "site-lisp/undo-tree"]
+	path = site-lisp/undo-tree
+	url = https://github.com/emacsmirror/undo-tree.git

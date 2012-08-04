@@ -71,6 +71,9 @@
 (require 'browse-kill-ring)
 ;; make M-y to use browse-kill-ring
 (browse-kill-ring-default-keybindings)
+(require 'wrap-region)
+(require 'undo-tree)
+(global-undo-tree-mode)
 
 ;; drag stuff
 ;; turn it on globally, except listed modes
