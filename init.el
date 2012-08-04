@@ -82,7 +82,8 @@
 
 ;; Fill column indicator
 (require 'fill-column-indicator)
-(setq fci-rule-color "#111122")
+(setq fci-rule-column 79)
+(setq fci-rule-color "#222")
 
 ;; Map files to modes
 (require 'mode-mappings)
