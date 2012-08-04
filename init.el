@@ -53,7 +53,7 @@
 ;; use rvm's default Ruby for the current Emacs session
 (rvm-use-default)
 (require 'rhtml-mode)
-(require 'yaml-mode) 
+(require 'yaml-mode)
 (require 'eproject)
 (require 'eproject-extras)
 (require 'jira-markup-mode)
@@ -67,6 +67,7 @@
 (require 'flymake-cursor)
 (require 'python-mode)
 (require 'highlight-indentation)
+(require 'smooth-scrolling)
 
 ;; drag stuff
 ;; turn it on globally, except listed modes
