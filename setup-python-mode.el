@@ -3,6 +3,8 @@
 (setq ipython-command "/sw/bin/ipython")
 (require 'ipython)
 
+(require 'helm-ipython)
+
 (require 'lambda-mode)
 (setq lambda-symbol (string (make-char 'greek-iso8859-7 107)))
 
