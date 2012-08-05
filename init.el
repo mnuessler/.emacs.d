@@ -54,8 +54,6 @@
 (rvm-use-default)
 (require 'rhtml-mode)
 (require 'yaml-mode)
-(require 'eproject)
-(require 'eproject-extras)
 (require 'jira-markup-mode)
 (require 'psvn)
 ;; relative fringe: display the buffer-relative positions of flymake
