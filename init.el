@@ -72,6 +72,7 @@
 (require 'wrap-region)
 (require 'undo-tree)
 (global-undo-tree-mode)
+(require 'helm-config)
 
 ;; drag stuff
 ;; turn it on globally, except listed modes
