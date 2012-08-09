@@ -73,6 +73,10 @@
 (require 'undo-tree)
 (global-undo-tree-mode)
 (require 'helm-config)
+(require 'auto-complete-config)
+(ac-config-default)
+(ac-set-trigger-key "TAB")
+(setq ac-auto-start nil)
 
 ;; drag stuff
 ;; turn it on globally, except listed modes

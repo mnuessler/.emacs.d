@@ -115,3 +115,12 @@
 [submodule "site-lisp/helm-ipython"]
 	path = site-lisp/helm-ipython
 	url = https://github.com/emacs-helm/helm-ipython.git
+[submodule "site-lisp/auto-complete"]
+	path = site-lisp/auto-complete
+	url = https://github.com/m2ym/auto-complete.git
+[submodule "site-lisp/popup-el"]
+	path = site-lisp/popup-el
+	url = https://github.com/m2ym/popup-el.git
+[submodule "site-lisp/fuzzy.el"]
+	path = site-lisp/fuzzy.el
+	url = https://github.com/m2ym/fuzzy-el.git
