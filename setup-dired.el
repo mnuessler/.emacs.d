@@ -15,4 +15,12 @@
 	    (dired-omit-mode 1)
 	    ))
 
+;; don't create new buffer each time moving up a directory
+;; source: http://www.emacswiki.org/emacs-es/DiredReuseDirectoryBuffer
+(add-hook 'dired-mode-hook
+	  (lambda ()
+	    (define-key dired-mode-map (kbd "^")
+	      (lambda () (interactive) (find-alternate-file "..")))
+	    ))
+
 (provide 'setup-dired)
