@@ -1,5 +1,8 @@
 ;; Set to non-nil to enable recursive deletion of directories
-(setq dired-recursive-deletes nil)
+(setq dired-recursive-deletes t)
+
+;; move files or directories into the operating system's Trash, instead of deleting them outright
+(setq delete-by-moving-to-trash t)
 
 ;; let search commands limit themselves to the file names (C-s behaves like M-s f C-s),
 ;; but only when point was on a file name initially
