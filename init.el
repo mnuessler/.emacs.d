@@ -124,7 +124,7 @@
 (recentf-mode 1)
 
 (require 'diminish)
-(diminish 'yas/minor-mode)
+(diminish 'yas-minor-mode)
 (diminish 'global-whitespace-mode)
 (diminish 'drag-stuff-mode)
 ;;(eval-after-load "filladapt" '(diminish 'filladapt-mode))
