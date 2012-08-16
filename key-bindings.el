@@ -74,4 +74,14 @@
 ;; show buffer file name in mini-buffer
 (global-set-key "\C-cz" 'show-file-name)
 
+;; insert German umlauts without switching the keyboard layout
+(require 'iso-insert)
+(global-set-key (kbd "M-;") 'insert-o-umlaut)
+(global-set-key (kbd "M-:") 'insert-O-umlaut)
+(global-set-key (kbd "M-'") 'insert-a-umlaut)
+(global-set-key (kbd "M-\"") 'insert-A-umlaut)
+(global-set-key (kbd "M-[") 'insert-u-umlaut)
+(global-set-key (kbd "M-{") 'insert-U-umlaut)
+(global-set-key (kbd "M--") 'insert-ss)
+
 (provide 'key-bindings)
