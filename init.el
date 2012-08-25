@@ -85,6 +85,11 @@
 (add-to-list 'drag-stuff-except-modes 'conflicting-mode)
 (add-to-list 'drag-stuff-except-modes 'dired-mode)
 (add-to-list 'drag-stuff-except-modes 'org-mode)
+;; back button
+(require 'back-button)
+(back-button-mode 1)
+;; Support sequential operation which omitted prefix keys
+(require 'smartrep)
 
 ;; Fill column indicator
 (require 'fill-column-indicator)

@@ -127,3 +127,9 @@
 [submodule "site-lisp/dired-sync"]
 	path = site-lisp/dired-sync
 	url = https://github.com/renard/dired-sync.git
+[submodule "site-lisp/back-button"]
+	path = site-lisp/back-button
+	url = https://github.com/rolandwalker/back-button.git
+[submodule "site-lisp/smartrep"]
+	path = site-lisp/smartrep
+	url = https://github.com/myuhe/smartrep.el.git
