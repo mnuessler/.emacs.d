@@ -25,7 +25,9 @@
 
 ;; Persist clock time between sessions
 (setq org-clock-persist 'history)
-(org-clock-persistence-insinuate)
+;; Deactivated because of problem with Emacs 24 on Linux:
+;; "cant't find library org"
+;;(org-clock-persistence-insinuate)
 (setq org-clock-into-drawer t)
 
 ;; MobileOrg
