@@ -66,6 +66,9 @@
 (add-to-list 'auto-mode-alist '("\\.erb\\'" . rhtml-mode))
 (add-to-list 'auto-mode-alist '("\\.rjs\\'" . rhtml-mode))
 
+;; octave
+(add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
+
 ;; disable auto-fill when using Firefox add-on "It's All Text!"
 (add-hook 'text-mode-hook
 	  (lambda ()
