@@ -77,6 +77,7 @@
 (ac-config-default)
 (ac-set-trigger-key "TAB")
 (setq ac-auto-start nil)
+(require 'bookmark+)
 
 ;; drag stuff
 ;; turn it on globally, except listed modes

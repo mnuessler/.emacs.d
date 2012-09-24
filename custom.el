@@ -6,6 +6,7 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(LaTeX-command "/usr/texbin/pdflatex -synctex=1")
+ '(bmkp-last-as-first-bookmark-file "~/.emacs.bmk")
  '(browse-url-browser-function (quote browse-url-choose-browser))
  '(confirm-kill-emacs (quote y-or-n-p))
  '(csv-separators (quote (",")))
@@ -15,7 +16,7 @@
  '(erc-user-full-name "Matthias Nuessler")
  '(global-whitespace-mode t)
  '(inhibit-startup-screen t)
- '(ispell-program-name "/sw/bin/ispell")
+ '(ispell-program-name "/sw/bin/ispell" t)
  '(jira-url "https://jira")
  '(latex-run-command "/usr/texbin/pdflatex -synctex=1")
  '(php-completion-file "~/.emacs.d/auxiliary-files/php-mode/php-functions.txt")

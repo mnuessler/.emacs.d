@@ -133,3 +133,6 @@
 [submodule "site-lisp/smartrep"]
 	path = site-lisp/smartrep
 	url = https://github.com/myuhe/smartrep.el.git
+[submodule "site-lisp/bookmark-plus"]
+	path = site-lisp/bookmark-plus
+	url = https://github.com/emacsmirror/bookmark-plus.git
