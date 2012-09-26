@@ -1,15 +1,16 @@
 ;; Custom settings
 
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(LaTeX-command "/usr/texbin/pdflatex -synctex=1")
  '(bmkp-last-as-first-bookmark-file "~/.emacs.bmk")
  '(browse-url-browser-function (quote browse-url-choose-browser))
  '(confirm-kill-emacs (quote y-or-n-p))
- '(csv-separators (quote (",")))
+ '(csv-align-style (quote auto))
+ '(csv-separators (quote ("," ";" "|")))
  '(eproject-completing-read-function (quote eproject--ido-completing-read))
  '(erc-nick "mnuessler")
  '(erc-server "irc.iscout.local")
@@ -30,10 +31,10 @@
  '(sql-oracle-program "sqlplus64")
  '(whitespace-style (quote (trailing space-before-tab empty))))
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(col-highlight ((t (:inherit highlight :background "#222"))))
  '(highlight ((t (:background "#222"))))
  '(hl-line ((t (:inherit highlight :background "#222")))))
