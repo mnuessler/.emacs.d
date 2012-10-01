@@ -133,6 +133,7 @@
 (diminish 'yas-minor-mode)
 (diminish 'global-whitespace-mode)
 (diminish 'drag-stuff-mode)
+(diminish 'undo-tree-mode)
 ;;(eval-after-load "filladapt" '(diminish 'filladapt-mode))
 
 ;; TRAMP
