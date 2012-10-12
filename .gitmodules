@@ -139,3 +139,6 @@
 [submodule "site-lisp/gitconfig-mode"]
 	path = site-lisp/gitconfig-mode
 	url = https://github.com/emacsmirror/gitconfig-mode.git
+[submodule "site-lisp/scala-mode"]
+	path = site-lisp/scala-mode
+	url = https://github.com/haxney/scala-mode.git
