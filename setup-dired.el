@@ -36,4 +36,9 @@
 	    (when (require 'dired-sync nil t)
 	      (define-key dired-mode-map (kbd "C-c S") 'dired-do-sync))))
 
+;; bound to `E': open file with gnome-open or mac open 
+(add-hook 'dired-mode-hook
+	  (lambda ()
+	    (local-set-key "E" 'dired-gnome-or-mac-open-file)))
+
 (provide 'setup-dired)
