@@ -80,7 +80,7 @@
 (setq ac-auto-start nil)
 (require 'bookmark+)
 (require 'gitconfig-mode)
-(require 'scala-mode-auto)
+(require 'scala-mode)
 
 ;; drag stuff
 ;; turn it on globally, except listed modes
