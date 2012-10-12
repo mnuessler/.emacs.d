@@ -54,3 +54,13 @@
 	 (txt (buffer-substring beg end))
 	 (cml (camelscore txt)) )
     (if cml (progn (delete-region beg end) (insert cml))) ))
+
+;; Standard Emacs convention is that <RET> (aka C-m) just adds a
+;; newline, whereas <LFD> (aka C-j) adds a newline and indents
+;; it. This is particularly inconvenient for users with keyboards
+;; which do not have a special <LFD> key at all; in such cases, it is
+;; typically more convenient to use <RET> as the <LFD> key (rather
+;; than typing C-j).  (From Octave doc.)
+(defun RET-behaves-as-LFD ()
+  (let ((x (key-binding "\C-j")))
+    (local-set-key "\C-m" x)))

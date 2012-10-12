@@ -48,6 +48,7 @@
 (require 'setup-java-mode)
 (require 'setup-test-case-mode)
 (require 'setup-python-mode)
+(require 'setup-octave-mode)
 (require 'ruby-end)
 (require 'rvm)
 ;; use rvm's default Ruby for the current Emacs session

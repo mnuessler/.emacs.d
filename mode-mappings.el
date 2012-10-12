@@ -67,6 +67,7 @@
 (add-to-list 'auto-mode-alist '("\\.rjs\\'" . rhtml-mode))
 
 ;; octave
+(autoload 'octave-mode "octave-mod" nil t)
 (add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
 
 ;; disable auto-fill when using Firefox add-on "It's All Text!"
