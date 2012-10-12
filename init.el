@@ -125,6 +125,7 @@
 
 ;; Table
 (require 'table)
+;; TODO disable table-recognize for csv minor mode
 (add-hook 'text-mode-hook 'table-recognize)
 
 ;; Enable recent files
@@ -145,6 +146,7 @@
 
 ;; Zen-coding
 (require 'zencoding-mode)
+;; TODO bind zencoding-expand-line to C-c C-j instead of C-j because it overwrites binding for newline-and-indent
 (add-hook 'sgml-mode-hook 'zencoding-mode) ;; Auto-start on any markup modes
 
 ;; Expand region
