@@ -70,6 +70,12 @@
 (autoload 'octave-mode "octave-mod" nil t)
 (add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
 
+;; prolog (disabled in favor to perl)
+;; insert in Prolog file the following comment as the first line:
+;; % -*- Mode: Prolog -*-
+;;(add-to-list 'auto-mode-alist '("\\.pl$" . prolog-mode))
+;;(add-to-list 'auto-mode-alist '("\\.m$" . mercury-mode))
+
 ;; disable auto-fill when using Firefox add-on "It's All Text!"
 (add-hook 'text-mode-hook
 	  (lambda ()

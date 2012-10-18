@@ -241,3 +241,10 @@
 (require 'server)
 (unless (server-running-p)
   (server-start))
+
+(autoload 'run-prolog "prolog" "Start a Prolog sub-process." t)
+(autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
+(autoload 'mercury-mode "prolog" "Major mode for editing Mercury programs." t)
+(setq prolog-system 'sicstus)
+
+(add-to-list 'exec-path "~/bin")
