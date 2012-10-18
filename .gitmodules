@@ -142,3 +142,6 @@
 [submodule "site-lisp/git-modes"]
 	path = site-lisp/git-modes
 	url = https://github.com/lunaryorn/git-modes.git
+[submodule "site-lisp/golden-ratio"]
+	path = site-lisp/golden-ratio
+	url = https://github.com/roman/golden-ratio.el.git

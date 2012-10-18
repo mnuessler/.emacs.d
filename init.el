@@ -227,9 +227,15 @@
 (add-hook 'after-save-hook
 	  'executable-make-buffer-file-executable-if-script-p)
 
-;; assigns a number to each window, so you can reach any window with just one command (M-1 … M-0)
+;; assigns a number to each window, so you can reach any window with
+;; just one command (M-1 … M-0)
 (require 'window-numbering)
 (window-numbering-mode 1)
+
+;; resize automatically the windows you are working on to the size
+;; specified in the "Golden Ratio".
+(require 'golden-ratio)
+(golden-ratio-enable)
 
 ;; Start Emacs server
 (require 'server)
