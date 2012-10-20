@@ -5,9 +5,13 @@
 ;; Set path to dependencies
 (setq site-lisp-dir (expand-file-name "site-lisp" dotfiles-dir))
 
+;; Set path to elpa packages
+(setq elpa-packages-dir (expand-file-name "elpa" dotfiles-dir))
+
 ;; Set up load path
 (add-to-list 'load-path dotfiles-dir)
 (add-to-list 'load-path site-lisp-dir)
+(add-to-list 'load-path elpa-packages-dir)
 
 ;; Add external projects to load path
 (dolist (project (directory-files site-lisp-dir t "\\w+"))
