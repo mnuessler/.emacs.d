@@ -145,3 +145,15 @@
 [submodule "site-lisp/golden-ratio"]
 	path = site-lisp/golden-ratio
 	url = https://github.com/roman/golden-ratio.el.git
+[submodule "site-lisp/gist"]
+	path = site-lisp/gist
+	url = https://github.com/defunkt/gist.el.git
+[submodule "site-lisp/gh"]
+	path = site-lisp/gh
+	url = https://github.com/sigma/gh.el.git
+[submodule "site-lisp/pcache"]
+	path = site-lisp/pcache
+	url = https://github.com/sigma/pcache.git
+[submodule "site-lisp/logito"]
+	path = site-lisp/logito
+	url = https://github.com/sigma/logito.git
