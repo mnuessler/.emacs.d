@@ -20,6 +20,8 @@
  '(ispell-program-name "/sw/bin/ispell" t)
  '(jira-url "https://jira")
  '(latex-run-command "/usr/texbin/pdflatex -synctex=1")
+ '(octave-block-offset 4)
+ '(org-agenda-files (quote ("~/Dropbox/org/private.org" "~/Dropbox/org/dev.org" "~/Dropbox/org/quotations.org")))
  '(php-completion-file "~/.emacs.d/auxiliary-files/php-mode/php-functions.txt")
  '(php-manual-path "~/opt/php-manual")
  '(php-mode-speedbar-open nil)
