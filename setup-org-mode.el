@@ -1,4 +1,4 @@
-(require 'org-install)
+(require 'org)
 
 ;; Enable auto-indent
 (setq org-startup-indented t)
