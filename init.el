@@ -85,6 +85,7 @@
 (require 'bookmark+)
 (require 'gitconfig-mode)
 (require 'scala-mode)
+(require 'feature-mode)
 
 ;; drag stuff
 ;; turn it on globally, except listed modes
@@ -259,3 +260,9 @@
 
 ;; Access gists on github
 (require 'gist)
+
+;; Set default for SQL mode
+(eval-after-load "sql"
+  '(progn
+     (sql-set-product 'postgres)))
+

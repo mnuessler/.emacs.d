@@ -82,4 +82,7 @@
 	    (when (string-match "/itsalltext/" (buffer-file-name))
 	      (turn-off-auto-fill))))
 
+;; cucumber
+(add-to-list 'auto-mode-alist '("\\.feature$" . feature-mode))
+
 (provide 'mode-mappings)

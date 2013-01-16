@@ -157,3 +157,6 @@
 [submodule "site-lisp/logito"]
 	path = site-lisp/logito
 	url = https://github.com/sigma/logito.git
+[submodule "site-lisp/cucumber"]
+	path = site-lisp/cucumber
+	url = https://github.com/michaelklishin/cucumber.el.git
