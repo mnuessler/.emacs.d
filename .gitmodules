@@ -160,3 +160,6 @@
 [submodule "site-lisp/cucumber"]
 	path = site-lisp/cucumber
 	url = https://github.com/michaelklishin/cucumber.el.git
+[submodule "site-lisp/dash"]
+	path = site-lisp/dash
+	url = https://github.com/magnars/dash.el.git
