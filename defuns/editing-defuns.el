@@ -64,3 +64,18 @@
 (defun RET-behaves-as-LFD ()
   (let ((x (key-binding "\C-j")))
     (local-set-key "\C-m" x)))
+
+(defun kill-start-of-line ()
+  "Kill from point to start of line"
+  (interactive)
+  (kill-line 0))
+
+(defun normalize-space-in-region (beg end)
+  "replace all whitespace in the region with single spaces"
+  (interactive "r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (while (re-search-forward "\\s-+" nil t)
+        (replace-match " ")))))

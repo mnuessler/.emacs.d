@@ -84,4 +84,11 @@
 (global-set-key (kbd "M-{") 'insert-U-umlaut)
 (global-set-key (kbd "M--") 'insert-ss)
 
+;; kill to start of current line
+(global-set-key (kbd "C-;") 'kill-start-of-line)
+
+;; Go to next line from anywhere in the current line
+;; (without modifying current line). (Like in Eclipse IDE)
+(global-set-key (kbd "<S-return>") (kbd "C-e C-m"))
+
 (provide 'key-bindings)
