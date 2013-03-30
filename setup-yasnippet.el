@@ -2,7 +2,8 @@
 
 (setq yas/snippet-dirs
       '("~/.emacs.d/snippets"
-	"~/.emacs.d/site-lisp/yasnippet/snippets"))
+	"~/.emacs.d/site-lisp/yasnippet/snippets"
+	"~/.emacs.d/site-lisp/cucumber/snippets"))
 (yas/global-mode 1)
 
 ;; Jump to end of snippet definition
