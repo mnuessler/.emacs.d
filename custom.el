@@ -6,7 +6,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(LaTeX-command "/usr/texbin/pdflatex -synctex=1")
- '(bmkp-last-as-first-bookmark-file "~/.emacs.bmk")
+ '(bmkp-last-as-first-bookmark-file "~/.emacs.d/bookmarks")
  '(browse-url-browser-function (quote browse-url-choose-browser))
  '(confirm-kill-emacs (quote y-or-n-p))
  '(csv-align-style (quote auto))
@@ -17,7 +17,7 @@
  '(erc-user-full-name "Matthias Nuessler")
  '(global-whitespace-mode t)
  '(inhibit-startup-screen t)
- '(ispell-program-name "/sw/bin/ispell" t)
+ '(ispell-program-name "/sw/bin/ispell")
  '(jira-url "https://jira")
  '(latex-run-command "/usr/texbin/pdflatex -synctex=1")
  '(octave-block-offset 4)
@@ -30,7 +30,10 @@
  '(python-shell-interpreter "ipython")
  '(save-place t nil (saveplace))
  '(show-paren-mode t)
+ '(sql-database "bobby")
  '(sql-oracle-program "sqlplus64")
+ '(sql-product (quote postgres))
+ '(sql-server "localhost")
  '(whitespace-style (quote (trailing space-before-tab empty))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
