@@ -86,6 +86,7 @@
 (require 'gitconfig-mode)
 (require 'scala-mode)
 (require 'feature-mode)
+;;(require 'sml-mode)
 
 ;; drag stuff
 ;; turn it on globally, except listed modes
@@ -253,6 +254,7 @@
 (setq prolog-system 'sicstus)
 
 (add-to-list 'exec-path "~/bin")
+(add-to-list 'exec-path "/usr/local/bin")
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 			 ("marmalade" . "http://marmalade-repo.org/packages/")
