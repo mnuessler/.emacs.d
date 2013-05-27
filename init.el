@@ -87,6 +87,7 @@
 (require 'scala-mode)
 (require 'feature-mode)
 ;;(require 'sml-mode)
+(require 'arduino-mode)
 
 ;; drag stuff
 ;; turn it on globally, except listed modes

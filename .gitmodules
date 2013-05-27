@@ -163,3 +163,6 @@
 [submodule "site-lisp/dash"]
 	path = site-lisp/dash
 	url = https://github.com/magnars/dash.el.git
+[submodule "site-lisp/arduino-mode"]
+	path = site-lisp/arduino-mode
+	url = https://github.com/bookest/arduino-mode.git
