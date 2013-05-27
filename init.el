@@ -87,6 +87,7 @@
 (require 'scala-mode)
 (require 'feature-mode)
 ;;(require 'sml-mode)
+(require 'groovy-mode)
 (require 'arduino-mode)
 
 ;; drag stuff
@@ -269,3 +270,4 @@
   '(progn
      (sql-set-product 'postgres)))
 
+(put 'upcase-region 'disabled nil)
