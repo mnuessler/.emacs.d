@@ -68,7 +68,7 @@
 ;; on a line containing a flymake error. This saves having to mouse
 ;; over the error, which is a keyboard user's annoyance.
 (require 'flymake-cursor)
-(require 'python-mode)
+(require 'python)
 (require 'highlight-indentation)
 (require 'smooth-scrolling)
 (require 'browse-kill-ring)
@@ -89,6 +89,7 @@
 ;;(require 'sml-mode)
 (require 'groovy-mode)
 (require 'arduino-mode)
+(require 'python-django)
 
 ;; drag stuff
 ;; turn it on globally, except listed modes

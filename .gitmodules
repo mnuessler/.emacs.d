@@ -166,3 +166,6 @@
 [submodule "site-lisp/arduino-mode"]
 	path = site-lisp/arduino-mode
 	url = https://github.com/bookest/arduino-mode.git
+[submodule "site-lisp/python-django"]
+	path = site-lisp/python-django
+	url = https://github.com/fgallina/python-django.el.git

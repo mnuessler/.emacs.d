@@ -91,4 +91,7 @@
 ;; (without modifying current line). (Like in Eclipse IDE)
 (global-set-key (kbd "<S-return>") (kbd "C-e C-m"))
 
+;; Django
+(global-set-key (kbd "C-x j") 'python-django-open-project)
+
 (provide 'key-bindings)
