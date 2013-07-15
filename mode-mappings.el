@@ -25,6 +25,12 @@
 (add-to-list 'auto-mode-alist '("\\.json$" . javascript-mode))
 ;;(add-hook 'js2-mode-hook (lambda () (require 'setup-js2-mode)))
 
+;; CoffeeScript
+;; http://www.emacswiki.org/emacs/CoffeeScript
+;; TODO setup coffeelint and flymake-coffee
+(add-to-list 'auto-mode-alist '("\\.coffee$" . coffee-mode))
+(add-to-list 'auto-mode-alist '("Cakefile" . coffee-mode))
+
 ;; Snippets
 (add-to-list 'auto-mode-alist '("yasnippet/snippets" . snippet-mode))
 (add-to-list 'auto-mode-alist '("\\.emacs.d/snippets" . snippet-mode))

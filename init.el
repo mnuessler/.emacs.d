@@ -272,3 +272,5 @@
      (sql-set-product 'postgres)))
 
 (put 'upcase-region 'disabled nil)
+
+(require 'coffee-mode)
