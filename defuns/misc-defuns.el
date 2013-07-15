@@ -29,3 +29,8 @@
   (let ((file (dired-get-file-for-visit)))
     (if is-mac (mac-open-file file)
       (gnome-open-file (file)))))
+
+(defun json-format ()
+  (interactive)
+  (save-excursion
+    (shell-command-on-region (mark) (point) "python -m json.tool" (buffer-name) t)))
