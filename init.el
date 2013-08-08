@@ -274,3 +274,6 @@
 (put 'upcase-region 'disabled nil)
 
 (require 'coffee-mode)
+;; Git code browser URL for JIRA commit link snippet
+(setq mtt-git-project "bobby")
+(setq mtt-git-browser-url (format "http://git.toroleo.net/%s/commit" mtt-git-project))
