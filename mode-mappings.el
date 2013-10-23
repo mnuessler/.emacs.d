@@ -91,4 +91,7 @@
 ;; cucumber
 (add-to-list 'auto-mode-alist '("\\.feature$" . feature-mode))
 
+;; SASS
+(add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
+
 (provide 'mode-mappings)

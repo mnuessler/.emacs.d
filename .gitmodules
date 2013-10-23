@@ -172,3 +172,9 @@
 [submodule "site-lisp/coffee-mode"]
 	path = site-lisp/coffee-mode
 	url = https://github.com/defunkt/coffee-mode
+[submodule "site-lisp/scss-mode"]
+	path = site-lisp/scss-mode
+	url = https://github.com/antonj/scss-mode.git
+[submodule "site-lisp/nyan-mode"]
+	path = site-lisp/nyan-mode
+	url = https://github.com/TeMPOraL/nyan-mode.git

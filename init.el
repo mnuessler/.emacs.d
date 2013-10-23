@@ -277,3 +277,12 @@
 ;; Git code browser URL for JIRA commit link snippet
 (setq mtt-git-project "bobby")
 (setq mtt-git-browser-url (format "http://git.toroleo.net/%s/commit" mtt-git-project))
+
+;; SASS
+(autoload 'scss-mode "scss-mode")
+;; Disable compilation of current file on save
+(setq scss-compile-at-save nil)
+
+;; Nyanyanyanyanyanyanya!
+(require 'nyan-mode)
+
