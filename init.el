@@ -1,6 +1,6 @@
 ;; Set path to .emacs.d
 (setq dotfiles-dir (file-name-directory
-                    (or (buffer-file-name) load-file-name)))
+		    (or (buffer-file-name) load-file-name)))
 
 ;; Set path to dependencies
 (setq site-lisp-dir (expand-file-name "site-lisp" dotfiles-dir))
@@ -24,7 +24,7 @@
 
 ;; Write backup files to own directory
 (setq backup-directory-alist `(("." . ,(expand-file-name
-                                        (concat dotfiles-dir "backups")))))
+					(concat dotfiles-dir "backups")))))
 
 ;; Save point position between sessions
 (require 'saveplace)
@@ -89,7 +89,11 @@
 ;;(require 'sml-mode)
 (require 'groovy-mode)
 (require 'arduino-mode)
+(add-hook 'arduino-hook '(lambda () (c-set-style "java")))
 (require 'python-django)
+;; JavaScript
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-to-list 'interpreter-mode-alist '("node" . js2-mode))
 
 ;; drag stuff
 ;; turn it on globally, except listed modes
@@ -182,7 +186,7 @@
 
 ;; Don't highlight text between quotes over multiple lines for properties files
 (add-hook 'conf-javaprop-mode-hook
-          '(lambda () (conf-quote-normal nil)))
+	  '(lambda () (conf-quote-normal nil)))
 
 (require 'sunrise-commander)
 
@@ -208,27 +212,27 @@
      1) a running ansi-term named *ansi-term*, rename it.
      2) a stopped ansi-term, kill it and create a new one.
      3) a non ansi-term, go to an already running ansi-term
-        or start a new one while killing a defunt one"
+	or start a new one while killing a defunt one"
   (interactive)
   (let ((is-term (string= "term-mode" major-mode))
-        (is-running (term-check-proc (buffer-name)))
-        (term-cmd "/bin/bash")
-        (anon-term (get-buffer "*ansi-term*")))
+	(is-running (term-check-proc (buffer-name)))
+	(term-cmd "/bin/bash")
+	(anon-term (get-buffer "*ansi-term*")))
     (if is-term
-        (if is-running
-            (if (string= "*ansi-term*" (buffer-name))
-                (call-interactively 'rename-buffer)
-              (if anon-term
-                  (pop-to-buffer "*ansi-term*")
-                (ansi-term term-cmd)))
-          (kill-buffer (buffer-name))
-          (ansi-term term-cmd))
+	(if is-running
+	    (if (string= "*ansi-term*" (buffer-name))
+		(call-interactively 'rename-buffer)
+	      (if anon-term
+		  (pop-to-buffer "*ansi-term*")
+		(ansi-term term-cmd)))
+	  (kill-buffer (buffer-name))
+	  (ansi-term term-cmd))
       (if anon-term
-          (if (term-check-proc "*ansi-term*")
-              (pop-to-buffer "*ansi-term*")
-            (kill-buffer "*ansi-term*")
-            (ansi-term term-cmd))
-        (ansi-term term-cmd)))))
+	  (if (term-check-proc "*ansi-term*")
+	      (pop-to-buffer "*ansi-term*")
+	    (kill-buffer "*ansi-term*")
+	    (ansi-term term-cmd))
+	(ansi-term term-cmd)))))
 (global-set-key (kbd "<f2>") 'visit-ansi-term)
 
 ;; make script files executable automatically
@@ -257,7 +261,9 @@
 (setq prolog-system 'sicstus)
 
 (add-to-list 'exec-path "~/bin")
+(add-to-list 'exec-path "/usr/bin")
 (add-to-list 'exec-path "/usr/local/bin")
+(add-to-list 'exec-path "/usr/local/share/npm/bin")
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 			 ("marmalade" . "http://marmalade-repo.org/packages/")
@@ -271,9 +277,15 @@
   '(progn
      (sql-set-product 'postgres)))
 
+;;(autoload 'whitespace-mode "whitespace" "Toggle whitespace visualization." t)
+;;(autoload 'whitespace-toggle-options "whitespace" "Toggle local `whitespace-mode' options." t)
+;;(setq whitespace-action '(auto-cleanup)) ;; automatically clean up bad whitespace
+;;(setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab)) ;; only show bad whitespace
+
 (put 'upcase-region 'disabled nil)
 
 (require 'coffee-mode)
+
 ;; Git code browser URL for JIRA commit link snippet
 (setq mtt-git-project "bobby")
 (setq mtt-git-browser-url (format "http://git.toroleo.net/%s/commit" mtt-git-project))

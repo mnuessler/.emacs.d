@@ -20,8 +20,9 @@
 ;;(add-hook 'clojure-mode-hook (lambda () (require 'setup-clojure-mode)))
 
 ;; JavaScript
-(autoload 'js2-mode "js2-mode" nil t)
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+;;(autoload 'js2-mode "js2-mode" nil t)
+;;(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.js$" . javascript-mode))
 (add-to-list 'auto-mode-alist '("\\.json$" . javascript-mode))
 ;;(add-hook 'js2-mode-hook (lambda () (require 'setup-js2-mode)))
 
@@ -55,6 +56,7 @@
 ;; jira-markup-mode
 (add-to-list 'auto-mode-alist '("\\.confluence$" . jira-markup-mode))
 (add-to-list 'auto-mode-alist '("/itsalltext/.*jira.*\\.txt$" . jira-markup-mode))
+(add-to-list 'auto-mode-alist '("/itsalltext/.*atlassian\\.net.*\\.txt$" . jira-markup-mode))
 
 ;; yaml-mode
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
