@@ -42,4 +42,15 @@
 	"~/Dropbox/org/dev.org"
 	"~/Dropbox/org/quotations.org"))
 
+;; Settings for code blocks
+;; Enable syntax highlighting
+(setq org-src-fontify-natively t)
+;; Preserve indentation
+(setq org-src-preserve-indentation t)
+;; Mapping of languages to major modes
+(add-to-list 'org-src-lang-modes '("json" . javascript))
+
+;; Enable speed commands
+(setq org-use-speed-commands t)
+
 (provide 'setup-org-mode)
