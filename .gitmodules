@@ -175,3 +175,6 @@
 [submodule "site-lisp/nyan-mode"]
 	path = site-lisp/nyan-mode
 	url = https://github.com/TeMPOraL/nyan-mode.git
+[submodule "site-lisp/inf-mongo"]
+	path = site-lisp/inf-mongo
+	url = https://github.com/tobiassvn/inf-mongo.git
