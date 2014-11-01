@@ -30,7 +30,17 @@
     (if is-mac (mac-open-file file)
       (gnome-open-file (file)))))
 
-(defun json-format ()
+(defun json-format-py ()
   (interactive)
   (save-excursion
     (shell-command-on-region (mark) (point) "python -m json.tool" (buffer-name) t)))
+
+;; Format JSON using underscore-cli
+;; (https://github.com/ddopson/underscore-cli)
+;; Installation:
+;; - `brew install node'
+;; - `npm install -g underscore-cli'
+(defun json-format-underscore ()
+  (interactive)
+  (save-excursion
+    (shell-command-on-region (mark) (point) "underscore pretty" (buffer-name) t)))
