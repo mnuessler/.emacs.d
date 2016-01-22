@@ -298,3 +298,5 @@
 ;; Nyanyanyanyanyanyanya!
 (require 'nyan-mode)
 
+(require 'setup-go-mode)
+
