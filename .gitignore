@@ -10,3 +10,7 @@
 /elpa
 /var
 
+/.cask/
+/.python-environments/
+/eshell/
+/session.*
