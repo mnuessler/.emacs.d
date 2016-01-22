@@ -302,3 +302,4 @@
 
 (require 'setup-go-mode)
 
+;;(require 'shell-pop)
