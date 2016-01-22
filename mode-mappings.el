@@ -24,6 +24,7 @@
 ;;(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.js$" . javascript-mode))
 (add-to-list 'auto-mode-alist '("\\.json$" . javascript-mode))
+(add-to-list 'auto-mode-alist '("\\.json.j2$" . javascript-mode))
 ;;(add-hook 'js2-mode-hook (lambda () (require 'setup-js2-mode)))
 
 ;; CoffeeScript
@@ -70,6 +71,10 @@
 (add-to-list 'auto-mode-alist '("\\.rb\\'" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.ru\\'" . ruby-mode))
 
+;; groovy mode
+(add-to-list 'auto-mode-alist '("\\.groovy$" . groovy-mode))
+(add-to-list 'auto-mode-alist '("\\.gradle$" . groovy-mode))
+
 ;; rhtml-mode
 (add-to-list 'auto-mode-alist '("\\.erb\\'" . rhtml-mode))
 (add-to-list 'auto-mode-alist '("\\.rjs\\'" . rhtml-mode))
@@ -95,5 +100,9 @@
 
 ;; SASS
 (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
+
+;; crontab
+(add-to-list 'auto-mode-alist '("\\.cron\\(tab\\)?\\'" . crontab-mode))
+(add-to-list 'auto-mode-alist '("cron\\(tab\\)?\\."    . crontab-mode))
 
 (provide 'mode-mappings)
