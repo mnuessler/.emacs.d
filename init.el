@@ -248,7 +248,7 @@
 ;; resize automatically the windows you are working on to the size
 ;; specified in the "Golden Ratio".
 (require 'golden-ratio)
-(golden-ratio-mode 1)
+(golden-ratio-mode 0)
 
 ;; Start Emacs server
 (require 'server)
