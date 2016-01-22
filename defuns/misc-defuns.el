@@ -44,3 +44,16 @@
   (interactive)
   (save-excursion
     (shell-command-on-region (mark) (point) "underscore pretty" (buffer-name) t)))
+
+;; Kill buffers
+(defun kill-other-buffers ()
+  "Kill all other buffers."
+  (interactive)
+  (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+
+(defun kill-dired-buffers ()
+  (interactive)
+  (mapc (lambda (buffer)
+	  (when (eq 'dired-mode (buffer-local-value 'major-mode buffer))
+	    (kill-buffer buffer)))
+	(buffer-list)))
