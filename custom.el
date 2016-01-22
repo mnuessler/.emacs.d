@@ -20,7 +20,7 @@
  '(godef-command "/home/matthias.nuessler/projects/go/bin/godef")
  '(gofmt-command "/home/matthias.nuessler/opt/go/bin/gofmt")
  '(inhibit-startup-screen t)
- '(ispell-program-name "/sw/bin/ispell")
+ '(ispell-program-name "ispell")
  '(jira-url "https://jira")
  '(latex-run-command "/usr/texbin/pdflatex -synctex=1")
  '(octave-block-offset 4)
