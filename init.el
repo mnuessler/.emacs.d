@@ -298,5 +298,7 @@
 ;; Nyanyanyanyanyanyanya!
 (require 'nyan-mode)
 
+(require 'magit-gerrit)
+
 (require 'setup-go-mode)
 
