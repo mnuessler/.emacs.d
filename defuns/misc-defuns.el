@@ -57,3 +57,21 @@
 	  (when (eq 'dired-mode (buffer-local-value 'major-mode buffer))
 	    (kill-buffer buffer)))
 	(buffer-list)))
+
+(defun other-window-kill-buffer ()
+  "Kill the buffer in the other window"
+  (interactive)
+  ;; Window selection is used because point goes to a different window
+  ;; if more than 2 windows are present
+  (let ((win-curr (selected-window))
+        (win-other (next-window)))
+    (select-window win-other)
+    (kill-this-buffer)
+    (select-window win-curr)))
+
+(defun read-first-line ()
+  "Read the first line of the buffer"
+  (save-excursion
+    (goto-char (point-min))
+    (buffer-substring-no-properties (line-beginning-position)
+                                    (line-end-position))))

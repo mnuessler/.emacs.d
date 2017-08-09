@@ -18,10 +18,10 @@
 (setq org-todo-keywords
       '((sequence "TODO" "STARTED" "WAITING" "|" "DONE" "CANCELED")))
 (setq org-todo-keyword-faces
-      '(("TODO" . org-warning)
-	("STARTED" . "yellow")
-	("WAITING" . "blue")
-	("CANCELED" . (:foreground "blue" :weight bold))))
+      '(("TODO"     . org-warning)
+        ("STARTED"  . "yellow")
+        ("WAITING"  . "blue")
+        ("CANCELED" . (:foreground "blue" :weight bold))))
 
 ;; Persist clock time between sessions
 (setq org-clock-persist 'history)
@@ -39,8 +39,8 @@
 (setq org-mobile-directory "~/Dropbox/MobileOrg")
 (setq org-agenda-files
       '("~/Dropbox/org/private.org"
-	"~/Dropbox/org/dev.org"
-	"~/Dropbox/org/quotations.org"))
+        "~/Dropbox/org/dev.org"
+        "~/Dropbox/org/quotations.org"))
 
 ;; Settings for code blocks
 ;; Enable syntax highlighting
@@ -58,8 +58,22 @@
 ;; '((plantuml . t)
 ;;   (restclient . t)))
 
+(setq org-plantuml-jar-path "~/bin/plantuml.jar")
+
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((restclient . t)))
+ '((restclient . t)
+   (plantuml . t)
+   ;;(influxdb . t)
+   (ipython . t)
+   (prolog . t)
+   (mongo . t)
+   (shell . t)
+   (redis . t)
+   (http . t)
+   (rust . t)
+   (sql . t)
+   ;; https://github.com/pope/ob-go
+   (go . t)))
 
 (provide 'setup-org-mode)
