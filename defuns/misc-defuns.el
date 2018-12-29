@@ -75,3 +75,16 @@
     (goto-char (point-min))
     (buffer-substring-no-properties (line-beginning-position)
                                     (line-end-position))))
+
+;; Source: https://www.bennee.com/~alex/blog/2018/04/07/working-with-dired/
+;; alias dired="emacsclient -a '' -t -e '(my-dired-frame default-directory)'"
+(defun my-dired-frame (directory)
+  "Open up a dired frame which closes on exit."
+  (interactive)
+  (switch-to-buffer (dired directory))
+  (local-set-key
+   (kbd "C-x C-c")
+   (lambda ()
+     (interactive)
+     (kill-this-buffer)
+     (save-buffers-kill-terminal 't))))

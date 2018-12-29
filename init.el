@@ -4,10 +4,10 @@
 (when (>= emacs-major-version 24)
   (setq package-archives '(("elpa"         . "https://elpa.gnu.org/packages/")
                            ("marmalade"    . "https://marmalade-repo.org/packages/")
-                           ("melpa"        . "https://melpa.milkbox.net/packages/")
+                           ("melpa"        . "https://melpa.org/packages/")
                            ("melpa-stable" . "https://stable.melpa.org/packages/")
                            ("elpy"         . "https://jorgenschaefer.github.io/packages/")
-                           ("org"          . "http://orgmode.org/elpa/"))
+                           ("org"          . "https://orgmode.org/elpa/"))
         package-archive-priorities '(("elpy"         . 99)
                                      ("org"          . 42)
                                      ("melpa-stable" . 15)
@@ -77,8 +77,14 @@
 
 ;; Set up load path
 (add-to-list 'load-path (expand-file-name "settings" dotfiles-dir))
+(add-to-list 'load-path (expand-file-name "el-get" dotfiles-dir))
+(if (file-directory-p "~/projects/mine/ob-influxdb")
+    (add-to-list 'load-path "~/projects/mine/ob-influxdb"))
 
 (require 'appearance)
+
+;; Side-by-side diffs with ediff
+(setq ediff-split-window-function 'split-window-horizontally)
 
 (use-package smooth-scrolling
   :ensure t
@@ -138,16 +144,17 @@
 ;; Magit, a git porcelain inside Emacs.
 (use-package magit
   :ensure t
-  :bind ("C-x g" . magit-status)
-  :config
-  (use-package magit-gerrit
-    :ensure t
-    :pin melpa))
+  :bind ("C-x g" . magit-status))
+
+(use-package magit-gerrit
+  :disabled
+  :ensure t
+  :after magit
+  :pin melpa)
 
 ;; Magit interfaces for GitHub
 ;; https://github.com/vermiculus/magithub
 (use-package magithub
-  :ensure t
   :after magit
   :config (magithub-feature-autoinject t))
 
@@ -171,7 +178,10 @@
   :config
   (exec-path-from-shell-initialize)
   (exec-path-from-shell-copy-env "GOPATH")
+  (exec-path-from-shell-copy-env "GOROOT")
+  (exec-path-from-shell-copy-env "JAVA_HOME")
   (exec-path-from-shell-copy-env "PYTHONPATH")
+  (exec-path-from-shell-copy-enf "WORKON_HOME")
   (exec-path-from-shell-copy-env "RUST_SRC_PATH"))
 
 ;; (require 'server)
@@ -234,9 +244,9 @@
 
 ;; Useful to read the email signature from a file.
 ;; Source: https://groups.google.com/d/msg/mu-discuss/kkhTgTgvlhc/eLiU8d0VMnsJ
-(defun file-string (file) 
-  "Read the contents of a file and return as a string." 
-  (with-current-buffer (find-file-noselect file) 
+(defun file-string (file)
+  "Read the contents of a file and return as a string."
+  (with-current-buffer (find-file-noselect file)
     (buffer-string)))
 
 ;; apt-get install offlineimap
@@ -254,7 +264,7 @@
         mu4e-trash-folder  "/[Gmail].Trash")
   ;; don't automatically mark messages as read
   (setq mu4e-view-auto-mark-as-read nil)
-  (setq mu4e-html2text-command "html2text -utf8 -width 72")
+  (setq mu4e-html2text-command 'mu4e-shr2text)
   ;; enable inline images
   (setq mu4e-view-show-images t)
   ;; use imagemagick, if available
@@ -262,7 +272,7 @@
     (imagemagick-register-types))
   ;; make mu4e the default program for composing mails
   (setq mail-user-agent 'mu4e-user-agent)
-  
+
   ;; Don't save message to Sent Messages, Gmail/IMAP takes care of this.
   (setq mu4e-sent-messages-behavior 'delete)
   ;; Don't show duplicate messages in search results.
@@ -344,15 +354,19 @@
 
 ;; http://www.djcbsoftware.nl/code/mu/mu4e/Other-search-functionality.html#Including-related-messages
 
+
 ;; Automatically detect language for Flyspell.
+;; https://github.com/tmalsburg/guess-language.el
+;; Show list of all dictionaries available for spell-checking:
+;;   (mapcar 'car ispell-dictionary-alist)
 (use-package guess-language
   :ensure t
   :defer t
   :init
   (add-hook 'text-mode-hook #'guess-language-mode)
   :config
-  (setq guess-language-langcodes '((en . ("en_US" "English"))
-                                   (de . ("de_DE" "German")))
+  (setq guess-language-langcodes '((en . ("en" "English"))
+                                   (de . ("german8" "German")))
         guess-language-languages '(en de)
         guess-language-min-paragraph-length 35)
   :diminish guess-language-mode)
@@ -369,16 +383,21 @@
 ;;
 ;; ansible-doc-mode (https://github.com/lunaryorn/ansible-doc.el)
 (use-package ansible
+  :ensure t
+  :pin melpa
   :init
   (setq ansible::vault-password-file "~/.ansible-vault-pass")
   :config
-  (add-hook 'ansible-hook 'ansible::auto-decrypt-encrypt)
+  (add-hook 'ansible-hook #'ansible::auto-decrypt-encrypt)
   (add-hook 'ansible-hook #'ansible-doc-mode))
 
 (require  'key-bindings)
 
 
 (use-package tramp)
+;;  :init
+;;  (tramp-set-completion-function "ssh"
+;;                                 '((tramp-parse-sconfig "~/.ssh/config"))))
 
 (use-package dired-x)
 
@@ -416,7 +435,7 @@
             (lambda ()
               (when (require 'dired-sync nil t)
                 (define-key dired-mode-map (kbd "C-c S") 'dired-do-sync))))
-  ;; bound to `E': open file with gnome-open or mac open 
+  ;; bound to `E': open file with gnome-open or mac open
   (add-hook 'dired-mode-hook
             (lambda ()
               (local-set-key "E" 'dired-gnome-or-mac-open-file)))
@@ -425,7 +444,7 @@
 (use-package yasnippet
   :ensure t
   :config
-  (yas/global-mode 1)
+  (yas-global-mode 1)
   :diminish yas-minor-mode)
 
 (use-package restclient
@@ -435,7 +454,9 @@
 ;; Major mode for PlantUML diagram definitions.
 ;; http://plantuml.com/
 (use-package plantuml-mode
-  :mode "\\.plu\\'")
+  :mode ("\\.plu\\'" "\\.plantuml\\'")
+  :bind (:map plantuml-mode-keymap
+              ("C-<f8>" . plantuml-complete-symbol)))
 
 ;; TODO mode mappings
 (require 'setup-org-mode)
@@ -454,6 +475,10 @@
 (use-package terminal-here
   :bind (("C-<f5>" . terminal-here-launch)
          ("C-<f6>" . terminal-here-project-launch)))
+
+;; Rainbow delimiters.
+(use-package rainbow-delimiters
+  :defer t)
 
 ;; Clojure Interactive Development Environment for Emacs
 ;; https://github.com/clojure-emacs/cider
@@ -474,9 +499,8 @@
   ;; Show imenu menubar.
   (add-hook 'cider-mode-hook #'imenu-add-menubar-index)
   ;; Rainbow delimiters.
-  (use-package rainbow-delimiters
-    :init
-    (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)))
+  (add-hook 'cider-mode-hook      #'rainbow-delimiters-mode)
+  (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
 
 (use-package clojure-cheatsheet
   :init
@@ -686,11 +710,6 @@
   :config
   (editorconfig-mode 1))
 
-;; Set default for SQL mode.
-(use-package sql-mode
-  :config
-  (sql-set-product 'mysql))
-
 ;; Emacs integration for gist.github.com.
 ;; https://github.com/defunkt/gist.el
 ;; Go to your GitHub Settings and generate a personal access token with gist scope
@@ -699,7 +718,7 @@
 ;;   git config --global github.oauth-token <your-personal-access-token-with-gist-scope>
 (use-package gist
   :defer t)
-  
+
 ;; http://orgmode.org/worg/org-tutorials/org-taskjuggler.html
 
 ;; Rust programming language.
@@ -758,7 +777,7 @@
 ;; auto-complete-mode
 ;; flycheck-mode
 ;;
-;; 
+;;
 ;; go get -u github.com/nsf/gocode
 ;; go get golang.org/x/tools/cmd/guru
 ;;
@@ -769,29 +788,38 @@
   :bind ("M-*" . pop-tag-mark)
   :init
   (add-hook 'before-save-hook #'gofmt-before-save)
+  (setq gofmt-command "goimports")
   (add-hook 'go-mode-hook
             (lambda ()
               (progn
                 (flycheck-mode 1)
+                (go-eldoc-setup)
+                (go-guru-hl-identifier-mode)
+                (rainbow-delimiters-mode-enable)
                 (local-set-key (kbd "M-.") #'godef-jump)
                 (local-set-key (kbd "M-*") #'pop-tag-mark)
+                (local-set-key (kbd "M-p") 'compile)            ; Invoke compiler
+                (local-set-key (kbd "M-P") 'recompile)          ; Redo most recent compile cmd
+                (local-set-key (kbd "M-]") 'next-error)         ; Go to next error (or msg)
+                (local-set-key (kbd "M-[") 'previous-error)
                 (if (not (string-match "go" compile-command))
                     (set (make-local-variable 'compile-command)
                          "go build -v && go test -v && go vet")))))
   :config
   ;; https://github.com/alecthomas/gometalinter
   ;; go get -u github.com/alecthomas/gometalinter
-  ;; gometalinter --install 
+  ;; gometalinter --install
   (use-package flycheck-gometalinter)
   (use-package auto-complete)
   (use-package go-autocomplete)
+  (use-package go-guru)
   ;; Integration of the 'gorename' tool into Emacs.
   ;; https://github.com/dominikh/go-mode.el/blob/master/go-rename.el
   ;; % go get golang.org/x/tools/cmd/gorename
   ;; % go build golang.org/x/tools/cmd/gorename
   ;; % mv gorename $HOME/bin/         # or elsewhere on $PATH
   (use-package go-rename))
-  ;; 
+  ;;
   ;; https://github.com/syohex/emacs-go-eldoc
   ;; Dependencies:
   ;; - gocode: go get -u github.com/nsf/gocode
@@ -874,7 +902,7 @@
             (lambda ()
               (word-wrap t))))
 
-;; Epub reader for emacs with org-mode integration. 
+;; Epub reader for emacs with org-mode integration.
 ;; https://github.com/bddean/emacs-ereader
 (use-package ereader :defer t)
 
@@ -911,13 +939,20 @@
   ;; The default action is projectile-find-file. Switch to project
   ;; root directory instead.
   (setq projectile-switch-project-action 'projectile-dired)
+  (add-hook 'projectile-after-switch-project-hook
+            (lambda ()
+              (go-set-project)))
   :config
   ;; Counsel-projectile provides further ivy integration into projectile.
   ;; https://github.com/ericdanan/counsel-projectile
   (use-package counsel-projectile :defer t)
-  (counsel-projectile-on)
+  (counsel-projectile-mode)
   (use-package persp-projectile :defer t))
 
+;; Run ripgrep with Projectile
+;; https://github.com/nlamirault/ripgrep.el/blob/master/projectile-ripgrep.el
+(use-package projectile-ripgrep
+  :after projectile)
 
 ;;(global-set-key (kbd "C-x M") 'mu4e)
 
@@ -940,24 +975,22 @@
 	      (ibuffer-do-sort-by-alphabetic))))
 
 ;; Python
-;; Python-mode is built in.
-(use-package python-mode
+;;
+;; https://github.com/jorgenschaefer/elpy
+;; Docs: https://elpy.readthedocs.io/en/latest/index.html
+;; pip install jedi flake8 importmagic autopep8 yapf
+(use-package elpy
+  :ensure t
+  :init (with-eval-after-load 'python (elpy-enable))
+  :bind (:map elpy-mode-map
+              ([f12] . elpy-shell-send-region-or-buffer)
+              ("M-." . elpy-goto-definition)))
+;; Provides a minor-mode `yapf-mode` that turns on automatically
+;; running YAPF on a buffer before saving
+;; https://github.com/JorisE/yapfify
+(use-package yapfify
   :init
-  ;; https://github.com/jorgenschaefer/elpy
-  ;; Docs: https://elpy.readthedocs.io/en/latest/index.html
-  ;; pip install jedi flake8 importmagic autopep8 yapf
-  (use-package elpy
-    :ensure t
-    :bind (:map elpy-mode-map
-                ([f12] . elpy-shell-send-region-or-buffer)))
-    ;; Provides a minor-mode `yapf-mode` that turns on automatically
-    ;; running YAPF on a buffer before saving
-    ;; https://github.com/JorisE/yapfify
-  (use-package yapfify
-    :init
-    (add-hook 'python-mode-hook 'yapf-mode))
-  :config
-  (elpy-enable))
+  (add-hook 'python-mode-hook 'yapf-mode))
 
 ;; Python auto-completion for Emacs
 ;; https://github.com/tkf/emacs-jedi
@@ -1017,15 +1050,22 @@
 (use-package speed-type
   :defer t)
 
-(use-package java-mode
-  :config
-  ;; Meghanada: Java Development Environment for Emacs.
-  ;; https://github.com/mopemope/meghanada-emacs
-  (use-package meghanada
-    :init
-    (add-hook 'java-mode-hook
-              (lambda ()
-                (meghanada-mode t)))))
+
+(use-package autodisass-java-bytecode
+  :ensure t
+  :defer t)
+
+;; Java
+(add-hook 'java-mode-hook
+          (lambda ()
+            (smartparens-mode t)
+            (rainbow-delimiters-mode t)))
+
+
+;; Meghanada: Java Development Environment for Emacs.
+;; https://github.com/mopemope/meghanada-emacs
+(use-package meghanada
+  :defer t)
 
 ;;;;;;;;;;;;;
 ;; Haskell ;;
@@ -1207,3 +1247,186 @@
 ;; https://github.com/meqif/docker-compose-mode
 (use-package docker-compose-mode
   :defer t)
+
+;; View certificates and CRLs using OpenSSL in Emacs.
+;; https://github.com/jobbflykt/x509-mode
+(use-package x509-mode
+  :defer t)
+
+;; https://github.com/kyagi/shell-pop-el
+(use-package shell-pop
+  :ensure t
+  :defer t
+  :init
+  ;; Fix: Emacs25 changed the shell buffers to open in a new window instead of the same one.
+  ;; https://github.com/kyagi/shell-pop-el/issues/51
+  (push (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist))
+
+(use-package git-timemachine
+  :ensure t
+  :defer t
+  :pin melpa
+  :bind ("C-x G" . git-timemachine))
+
+;; Multiple cursors for Emacs.
+;; https://github.com/magnars/multiple-cursors.el
+(use-package multiple-cursors
+  :ensure t
+  :defer t
+  :bind (("C->"         . mc/mark-next-like-this)
+         ("C-<"         . mc/mark-previous-like-this)
+         ("C-c C-<"     . mc/mark-all-like-this)
+         ("C-c C->"     . mc/mark-all-like-this)
+         ("C-S-c C-S-c" . mc/edit-lines)))
+
+;; Increase selected region by semantic units.
+;; https://github.com/magnars/expand-region.el
+(use-package expand-region
+  :ensure t
+  :defer t
+  :bind (("C-=" . er/expand-region)
+         ("C-+" . er/contract-region)))
+
+(use-package smartparens
+  :ensure t
+  :diminish smartparens-mode
+  :config
+  (progn
+    (require 'smartparens-config)
+    (smartparens-global-mode 1)))
+
+(use-package company-shell
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-shell))
+
+;; Winner mode - undo and redo window configuration
+;; Use C-c <left> and C-c <right> to switch between window configurations.
+(use-package winner
+  :defer t
+  :config
+  (winner-mode 1))
+
+(use-package el-get
+  :ensure t
+  :pin melpa
+  :commands (el-get-bundle))
+
+;(el-get-bundle transponse-frames
+;  :url "https://raw.githubusercontent.com/emacsmirror/emacswiki.org/master/transpose-frame.el")
+
+;; https://github.com/Fuco1/dired-hacks#dired-collapse
+(use-package dired-collapse
+  :ensure t
+  :init
+  (add-hook 'dired-mode-hook
+            (lambda ()
+              (dired-collapse-mode 1))))
+
+;(use-package dired+
+;  :defer t
+;  :ensure t
+;  :init
+;  (diredp-toggle-find-file-reuse-dir 1))
+
+; Manage docker from Emacs.
+; https://github.com/Silex/docker.el
+(use-package docker
+  :config
+  (docker-global-mode))
+
+;; Interactively highlight which buffer is active by dimming the others.
+;; https://github.com/gonewest818/dimmer.el
+(use-package dimmer
+  :ensure t
+  :config
+  (dimmer-mode 1))
+
+;;(use-package comment-tags
+;;  :init
+;;  (add-hook))
+
+;; Highlight uncommitted changes.
+;; https://github.com/dgutov/diff-hl
+;; (use-package diff-hl
+;;   :defer t
+;;   :ensure t
+;;   :pin melpa
+;;   :init
+;;   (add-hook 'prog-mode-hook #'turn-on-diff-hl-mode)
+;;   (add-hook 'vc-dir-mode-hook #'turn-on-diff-hl-mode)
+;;   (add-hook 'dired-mode-hook #'diff-hl-dired-mode)
+;;   (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh))
+
+;; Flycheck YAMLLint integration
+;; https://github.com/krzysztof-magosa/flycheck-yamllint
+(use-package flycheck-yamllint
+  :ensure t
+  :defer t
+  :init
+  (progn
+    (eval-after-load 'flycheck
+      '(add-hook 'flycheck-mode-hook 'flycheck-yamllint-setup))
+    (eval-after-load 'yaml-mode
+      '(add-hook 'yaml-mode-hook
+                 (lambda ()
+                   (flycheck-mode 1))))))
+
+;; Preserve the scratch buffer across Emacs sessions.
+;; https://github.com/Fanael/persistent-scratch
+(use-package persistent-scratch
+  :pin melpa
+  :init
+  (persistent-scratch-setup-default))
+
+;; Elixir
+(use-package alchemist
+  :init
+  (progn
+    (eval-after-load 'elixir-mode
+      '(add-hook 'elixir-mode-hook
+                 (lambda ()
+                   (company-mode 1))))))
+
+;; https://github.com/anildigital/mix-format.el
+;;  (add-hook 'elixir-mode-hook
+;;            (lambda ()
+;;              (add-hook 'before-save-hook 'elixor-format-before-save))))
+
+(use-package sqlup-mode
+  :disabled
+  :init
+  ;; Capitalize keywords in SQL mode
+  (add-hook 'sql-mode-hook 'sqlup-mode)
+  ;; Capitalize keywords in an interactive session (e.g. psql)
+  (add-hook 'sql-interactive-mode-hook 'sqlup-mode)
+  ;; Set a global keyword to use sqlup on a region
+  (global-set-key (kbd "C-c u") 'sqlup-capitalize-keywords-in-region)
+  (add-to-list 'sqlup-blacklist "User"))
+
+;; Emacs interface to Google Translate
+;; https://github.com/atykhonov/google-translate
+(use-package google-translate
+  :bind (("C-c t" . google-translate-at-point)
+         ("C-c T" . google-translate-query-translate)))
+
+;; Enforce rules for popup windows.
+;; https://github.com/wasamasa/shackle
+;; (use-package shackle
+;;   :defer t
+;;   :init
+;;   (add-to-list 'shackle-rules '("\\*shell-1\\*" :regexp t :same t)))
+
+(use-package bash-completion
+  :init
+  (bash-completion-setup))
+
+;; Avoid escape nightmares by editing strings in a separate buffer.
+;; https://github.com/magnars/string-edit.el
+(use-package string-edit
+  :ensure t
+  :bind ("C-c C-\"" . string-edit-at-point))
+
+;; https://github.com/Fuco1/elisp-docstring-mode
+(use-package elisp-docstring-mode
+  :ensure t)

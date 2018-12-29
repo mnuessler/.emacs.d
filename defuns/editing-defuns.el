@@ -136,3 +136,45 @@ Goes backward if ARG is negative; error if CHAR not found."
   (zap-to-char arg char)
   (insert-char char)
   (backward-char))
+
+;; Move line
+;; Source: https://www.emacswiki.org/emacs/MoveLine
+(defmacro save-column (&rest body)
+  `(let ((column (current-column)))
+     (unwind-protect
+         (progn ,@body)
+       (move-to-column column))))
+
+(defun move-line-up ()
+  (interactive)
+  (save-column
+    (transpose-lines 1)
+    (forward-line -2)))
+
+(defun move-line-down ()
+  (interactive)
+  (save-column
+    (forward-line 1)
+    (transpose-lines 1)
+    (forward-line -1)))
+
+;; Duplicate line
+(defun duplicate-line()
+  (interactive)
+  (save-column
+   (move-beginning-of-line 1)
+   (kill-line)
+   (yank)
+   (open-line 1)
+   (next-line 1)
+   (yank)))
+
+;; Switch focus to minibuffer window.
+;; Source: https://superuser.com/questions/132225/how-to-get-back-to-an-active-minibuffer-prompt-in-emacs-without-the-mouse
+(defun switch-to-minibuffer-window ()
+  "switch to minibuffer window (if active)"
+  (interactive)
+  (when (active-minibuffer-window)
+    (select-frame-set-input-focus (window-frame (active-minibuffer-window)))
+    (select-window (active-minibuffer-window))))
+(global-set-key (kbd "<f7>") 'switch-to-minibuffer-window)

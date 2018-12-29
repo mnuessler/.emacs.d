@@ -2,7 +2,11 @@
 ;;(global-set-key (kbd "C-c q") 'auto-fill-mode)
 
 ;; Sets `C-c d` to `M-x kill-whole-line`
-(global-set-key "\C-cd" 'kill-whole-line)
+(global-set-key (kbd "C-c d") 'kill-whole-line)
+(global-set-key (kbd "C-S-k") 'kill-whole-line)
+
+;; Kill to start of current line.
+(global-set-key (kbd "C-c k") 'kill-start-of-line)
 
 ;; Mark current word
 ;; defined in editing-defuns.el
@@ -13,30 +17,12 @@
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 
-;; expand region
-(global-set-key (kbd "C-=") 'er/expand-region)
-(global-set-key (kbd "C-+") 'er/contract-region)
-
-;; replace the original string-rectangle binding
-;; by the inline version from mark-multiple
-(global-set-key (kbd "C-x r t") 'inline-string-rectangle)
-
-;; bindings for mark-more-like-this
-(global-set-key (kbd "C-<") 'mark-previous-like-this)
-(global-set-key (kbd "C->") 'mark-next-like-this)
-(global-set-key (kbd "C-M-m") 'mark-more-like-this) ; like the other two, but takes an argument (negative is previous)
-(global-set-key (kbd "C-*") 'mark-all-like-this)
-
 ;; Smex
 ;;(global-set-key (kbd "M-x") 'smex)
 ;;(global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ;; This is your old M-x.
 ;;(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
-;; Find file in project
-;;(global-set-key (kbd "C-x f") 'find-file-in-project)
-
-;; php-mode
 ;;(define-key php-mode-map (kbd "RET") 'newline-and-indent)
 
 ;; show buffer file name in mini-buffer
@@ -52,9 +38,6 @@
 ;; (global-set-key (kbd "M-{") 'insert-U-umlaut)
 ;; (global-set-key (kbd "M--") 'insert-ss)
 
-;; kill to start of current line
-(global-set-key (kbd "C-;") 'kill-start-of-line)
-
 ;; Go to next line from anywhere in the current line
 ;; (without modifying current line). (Like in Eclipse IDE)
 (global-set-key (kbd "<S-return>") (kbd "C-e C-m"))
@@ -65,5 +48,12 @@
 ;; remap C-a to `smarter-move-beginning-of-line'
 (global-set-key [remap move-beginning-of-line]
                 'smarter-move-beginning-of-line)
+
+;; Move line
+(global-set-key (kbd "M-<up>") 'move-line-up)
+(global-set-key (kbd "M-<down>") 'move-line-down)
+
+;; Duplicate line
+(global-set-key (kbd "C-S-d") 'duplicate-line)
 
 (provide 'key-bindings)

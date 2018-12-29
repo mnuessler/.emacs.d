@@ -67,6 +67,7 @@
    ;;(influxdb . t)
    (ipython . t)
    (prolog . t)
+   (elixir . t)
    (mongo . t)
    (shell . t)
    (redis . t)
