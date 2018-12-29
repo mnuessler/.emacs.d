@@ -26,8 +26,8 @@
       (activate-mark))))
 
 
-;; cycle conversion between CamelCase under_score etc. styles
-;; source: http://www.emacswiki.org/CamelCase
+;; Cycle conversion between CamelCase under_score etc. styles
+;; Source: http://www.emacswiki.org/CamelCase
 (defun split-name (s)
   (split-string
    (let ((case-fold-search nil))
@@ -178,3 +178,48 @@ Goes backward if ARG is negative; error if CHAR not found."
     (select-frame-set-input-focus (window-frame (active-minibuffer-window)))
     (select-window (active-minibuffer-window))))
 (global-set-key (kbd "<f7>") 'switch-to-minibuffer-window)
+
+;; https://emacs.stackexchange.com/questions/41222/how-can-i-pass-the-no-line-break-argument-to-base64-encode-region-in-m-x
+(defun my/base64-encode-region-no-break ()
+  (interactive)
+  (base64-encode-region (mark) (point) t))
+
+(defun base64-encode-region-prefix-arg (&rest _args)
+  "Pass prefix arg as third arg to `base64-encode-region'."
+  (interactive "r\nP"))
+(advice-add 'base64-encode-region :before #'base64-encode-region-prefix-arg)
+
+;; Source: http://ergoemacs.org/emacs/elisp_escape_quotes.html
+(defun my/escape-quotes (@begin @end)
+  "Replace 「\"」 by 「\\\"」 in current line or text selection.
+See also: `my/unescape-quotes'"
+  (interactive
+   (if (use-region-p)
+       (list (region-beginning) (region-end))
+     (list (line-beginning-position) (line-end-position))))
+  (save-excursion
+    (save-restriction
+      (narrow-to-region @begin @end)
+      (goto-char (point-min))
+      (while (search-forward "\"" nil t)
+        (replace-match "\\\"" "FIXEDCASE" "LITERAL")))))
+
+(defun my/unescape-quotes (@begin @end)
+  "Replace  「\\\"」 by 「\"」 in current line or text selection.
+See also: `my/escape-quotes'"
+  (interactive
+   (if (use-region-p)
+       (list (region-beginning) (region-end))
+     (list (line-beginning-position) (line-end-position))))
+  (save-excursion
+    (save-restriction
+      (narrow-to-region @begin @end)
+      (goto-char (point-min))
+      (while (search-forward "\\\"" nil t)
+        (replace-match "\"" "FIXEDCASE" "LITERAL")))))
+
+(defun my-kill-whole-line (&optional arg)
+  "Kill the current line but preserve the column position."
+  (interactive "p")
+  (save-column
+   (kill-whole-line arg)))

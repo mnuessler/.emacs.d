@@ -64,8 +64,8 @@
  'org-babel-load-languages
  '((restclient . t)
    (plantuml . t)
-   ;;(influxdb . t)
-   (ipython . t)
+   (influxdb . t)
+;;   (ipython . t)
    (prolog . t)
    (elixir . t)
    (mongo . t)

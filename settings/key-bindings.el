@@ -1,8 +1,7 @@
 ;; Keyboard shortcut for toggling autofill mode
 ;;(global-set-key (kbd "C-c q") 'auto-fill-mode)
 
-;; Sets `C-c d` to `M-x kill-whole-line`
-(global-set-key (kbd "C-c d") 'kill-whole-line)
+;; Kill whole line.
 (global-set-key (kbd "C-S-k") 'kill-whole-line)
 
 ;; Kill to start of current line.
@@ -49,11 +48,11 @@
 (global-set-key [remap move-beginning-of-line]
                 'smarter-move-beginning-of-line)
 
-;; Move line
-(global-set-key (kbd "M-<up>") 'move-line-up)
-(global-set-key (kbd "M-<down>") 'move-line-down)
-
 ;; Duplicate line
 (global-set-key (kbd "C-S-d") 'duplicate-line)
+
+;; Bind a key for imenu, but use counsel.
+(global-set-key (kbd "M-i") 'counsel-imenu)
+(global-set-key (kbd "C-x C-r") 'counsel-recentf)
 
 (provide 'key-bindings)

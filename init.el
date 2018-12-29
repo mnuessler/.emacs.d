@@ -156,7 +156,9 @@
 ;; https://github.com/vermiculus/magithub
 (use-package magithub
   :after magit
-  :config (magithub-feature-autoinject t))
+  :config
+  (magithub-feature-autoinject t)
+  (setq magithub-clone-default-directory "~/projects"))
 
 (use-package kubernetes
   :ensure t
@@ -181,30 +183,33 @@
   (exec-path-from-shell-copy-env "GOROOT")
   (exec-path-from-shell-copy-env "JAVA_HOME")
   (exec-path-from-shell-copy-env "PYTHONPATH")
-  (exec-path-from-shell-copy-enf "WORKON_HOME")
+  (exec-path-from-shell-copy-env "WORKON_HOME")
   (exec-path-from-shell-copy-env "RUST_SRC_PATH"))
 
-;; (require 'server)
-(use-package edit-server)
-;;   :if window-system
-;;   :init
-;;   (add-hook 'after-init-hook '(lambda ()
-;;                              (unless (server-running-p)
-;;                                (server-start))) t)
-;;  (add-hook 'after-init-hook 'edit-server-start t))
-;; (setq edit-server-new-frame nil)
-;; (setq edit-server-url-major-mode-alist
-;;   '(("github\\.com" . markdown-mode)))
+(use-package edit-server
+  :if window-system
+  :init
+;;  (add-hook 'after-init-hook '(lambda ()
+;;                                (unless (server-running-p)
+;;                                  (server-start))) t)
+  (add-hook 'after-init-hook 'edit-server-start t)
+  (setq edit-server-new-frame nil)
+  (setq edit-server-url-major-mode-alist
+        '(("github\\.com" . markdown-mode))))
 
 ;; Required by neotree icon theme and all-the-icons-dired-mode.
 ;; Requires installation of fonts to work correctly:
 ;; https://github.com/domtronn/all-the-icons.el/tree/master/fonts
+;;
+;; If icons are not displayed correctly, manually apply fix from:
+;; https://github.com/domtronn/all-the-icons.el/pull/106
 (use-package all-the-icons
   :defer t
-  :diminish all-the-icons-dired-mode)
-
-;; Use icons in dired mode.
-(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+  :after dired
+  :diminish all-the-icons-dired-mode
+  :init
+  ;; Use icons in dired mode.
+  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
 
 ;; Neotree. Available themes:
 ;; - classic (default)
@@ -240,7 +245,14 @@
   :bind (("C-s" . swiper)
          ("C-r" . swiper)
          ([f6]  . ivy-resume))
-  :diminish ivy)
+  :diminish ivy-mode)
+
+;; https://github.com/abo-abo/swiper#counsel
+(use-package counsel
+  :ensure t
+  :init
+  (counsel-mode 1)
+  :diminish counsel-mode)
 
 ;; Useful to read the email signature from a file.
 ;; Source: https://groups.google.com/d/msg/mu-discuss/kkhTgTgvlhc/eLiU8d0VMnsJ
@@ -399,16 +411,16 @@
 ;;  (tramp-set-completion-function "ssh"
 ;;                                 '((tramp-parse-sconfig "~/.ssh/config"))))
 
-(use-package dired-x)
-
 (use-package dired
   :init
   ;; Set to non-nil to enable recursive deletion of directories
   (setq dired-recursive-deletes t)
-  ;; move files or directories into the operating system's Trash, instead of deleting them outright
+  ;; Move files or directories into the operating system's Trash,
+  ;; instead of deleting them outright
   (setq delete-by-moving-to-trash t)
-  ;; let search commands limit themselves to the file names (C-s behaves like M-s f C-s),
-  ;; but only when point was on a file name initially
+  ;; Let search commands limit themselves to the file names (C-s
+  ;; behaves like M-s f C-s), but only when point was on a file name
+  ;; initially.
   (setq dired-isearch-filenames 'dwim)
   ;; Set up dired-x
   (add-hook 'dired-load-hook
@@ -423,23 +435,56 @@
               ;; Set dired-x buffer-local variables here.
               (dired-omit-mode 1)
               ))
-  ;; don't create new buffer each time moving up a directory
-  ;; source: http://www.emacswiki.org/emacs-es/DiredReuseDirectoryBuffer
+  ;; Reuse dired buffer moving up a directory instead of creating a
+  ;; new one every time.
+  ;; Source: http://www.emacswiki.org/emacs-es/DiredReuseDirectoryBuffer
   (add-hook 'dired-mode-hook
             (lambda ()
               (define-key dired-mode-map (kbd "^")
-                (lambda () (interactive) (find-alternate-file "..")))
-              ))
+                (lambda ()
+                  (interactive)
+                  (find-alternate-file "..")))))
+  ;; Reuse dired buffer when entering subdirectory (requires dired+).
+  ;; Source: http://www.emacswiki.org/emacs-es/DiredReuseDirectoryBuffer
+  ;; (add-hook 'dired-mode-hook
+  ;;           (lambda ()
+  ;;             (when (require 'dired+ nil t)
+  ;;               (progn
+  ;;                 ;; hide-details-mode is bound to "(" in a dired buffer
+  ;;                 (dired-hide-details-mode 0)
+  ;;                 (diredp-toggle-find-file-reuse-dir 1)))))
   ;; dired-sync provides a simple and easy way to synchronize directories
   (add-hook 'dired-mode-hook
             (lambda ()
               (when (require 'dired-sync nil t)
                 (define-key dired-mode-map (kbd "C-c S") 'dired-do-sync))))
-  ;; bound to `E': open file with gnome-open or mac open
+  ;; Open file at point with gnome-open or mac open by pressing 'E'.
   (add-hook 'dired-mode-hook
             (lambda ()
-              (local-set-key "E" 'dired-gnome-or-mac-open-file)))
-  (use-package dired-imenu))
+              (local-set-key "E" 'dired-gnome-or-mac-open-file))))
+
+(use-package dired-x
+  :after dired)
+
+(use-package dired-imenu
+  :after dired)
+
+;; Version in repo is outdated. Latest version can be downloaded from:
+;; https://www.emacswiki.org/emacs/dired%2b.el
+;; (Disabled because it messes up the color scheme.)
+(use-package dired+
+  :disabled
+  :after dired
+  (diredp-toggle-find-file-reuse-dir 1))
+
+;; https://github.com/Fuco1/dired-hacks#dired-collapse
+(use-package dired-collapse
+  :ensure t
+  :after dired
+  :init
+  (add-hook 'dired-mode-hook
+            (lambda ()
+              (dired-collapse-mode 1))))
 
 (use-package yasnippet
   :ensure t
@@ -480,7 +525,15 @@
 (use-package rainbow-delimiters
   :defer t)
 
-;; Clojure Interactive Development Environment for Emacs
+
+;; Clojure
+(use-package clojure-mode
+  :init
+  (add-hook 'clojure-mode-hook
+            (lambda ()
+              (prettify-symbols-mode 1))))
+
+;; CIDER: Clojure Interactive Development Environment for Emacs
 ;; https://github.com/clojure-emacs/cider
 ;; https://cider.readthedocs.io/en/latest/
 (use-package cider
@@ -501,10 +554,6 @@
   ;; Rainbow delimiters.
   (add-hook 'cider-mode-hook      #'rainbow-delimiters-mode)
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
-
-(use-package clojure-cheatsheet
-  :init
-  (define-key clojure-mode-map (kbd "C-c C-h") #'clojure-cheatsheet))
 
 ;; JavaScript
 ;; Deps: apt-get install nodejs
@@ -587,38 +636,9 @@
 (use-package xkcd)
 
 ;; Make script files executable automatically.
-;; source: http://www.masteringemacs.org/articles/2011/01/19/script-files-executable-automatically/
+;; Source: http://www.masteringemacs.org/articles/2011/01/19/script-files-executable-automatically/
 (add-hook 'after-save-hook
           'executable-make-buffer-file-executable-if-script-p)
-
-;; Source: http://www.enigmacurry.com/2008/12/26/emacs-ansi-term-tricks/
-(require 'term)
-(defun visit-ansi-term ()
-  "If the current buffer is:
-     1) a running ansi-term named *ansi-term*, rename it.
-     2) a stopped ansi-term, kill it and create a new one.
-     3) a non ansi-term, go to an already running ansi-term
-        or start a new one while killing a defunct one"
-  (interactive)
-  (let ((is-term (string= "term-mode" major-mode))
-        (is-running (term-check-proc (buffer-name)))
-        (term-cmd "/bin/bash")
-        (anon-term (get-buffer "*ansi-term*")))
-    (if is-term
-        (if is-running
-            (if (string= "*ansi-term*" (buffer-name))
-                (call-interactively 'rename-buffer)
-              (if anon-term
-                  (pop-to-buffer "*ansi-term*")
-                (ansi-term term-cmd)))
-          (kill-buffer (buffer-name))
-          (ansi-term term-cmd))
-      (if anon-term
-          (if (term-check-proc "*ansi-term*")
-              (pop-to-buffer "*ansi-term*")
-            (kill-buffer "*ansi-term*")
-            (ansi-term term-cmd))
-        (ansi-term term-cmd)))))
 
 ;; Terminal.
 (use-package term
@@ -679,26 +699,29 @@
   :config
   (setq prolog-system 'sicstus))
 
-;; GNU Octave
+;; GNU Octave (octave-mode is part of Emacs).
 ;; apt-get install octave
 ;; https://www.gnu.org/software/octave/doc/v4.0.0/Using-Octave-Mode.html
-(use-package octave-mode
-  :config
-  (abbrev-mode 1)
-  (auto-fill-mode 1)
-  (if (eq window-system 'x)
-      (font-lock-mode 1))
-  (octave-auto-indent 1)
-  (octave-auto-newline 1)
-  (RET-behaves-as-LFD)
-  ;; https://github.com/coldnew/ac-octave
-  (use-package ac-octave
-    :init
-    (add-hook 'octave-mode-hook
-              (lambda ()
-                (progn
-                  (setq ac-sources '(ac-complete-octave))
-                  (auto-complete-mode 1))))))
+(add-hook 'octave-mode-hook
+          (lambda ()
+            (progn
+              (abbrev-mode 1)
+              (auto-fill-mode 1)
+              (if (eq window-system 'x)
+                  (font-lock-mode 1))
+              (octave-auto-indent 1)
+              (octave-auto-newline 1)
+              (RET-behaves-as-LFD))))
+
+;; https://github.com/coldnew/ac-octave
+(use-package ac-octave
+  :defer t
+  :init
+  (add-hook 'octave-mode-hook
+            (lambda ()
+              (progn
+                (setq ac-sources '(ac-complete-octave))
+                (auto-complete-mode 1)))))
 
 ;; EditorConfig support for Emacs.
 ;; http://editorconfig.org/
@@ -745,10 +768,26 @@
     (setq company-tooltip-align-annotations t))
   (setq rust-format-on-save t))
 
+
 ;; Swift.
 ;; https://github.com/swift-emacs/swift-mode
 (use-package swift-mode
   :mode "\\.swift\\'")
+
+;; https://github.com/swift-emacs/flycheck-swift
+(use-package flycheck-swift
+  :after (flycheck swift-mode)
+  :init
+  (eval-after-load 'flycheck '(flycheck-swift-setup)))
+
+;; Completion for Swift projects via SourceKit(ten)
+;; OSX only. Only works when there is a *.xcodeproj up the directory tree.
+;; https://github.com/nathankot/company-sourcekit
+(use-package company-sourcekit
+  :if (memq window-system '(mac ns))
+  :after company
+  :init
+  (add-to-list 'company-backends 'company-sourcekit))
 
 ;; Ledger
 ;; http://ledger-cli.org/3.0/doc/ledger-mode.html
@@ -889,6 +928,18 @@
           (lambda ()
             (when (equal "~/.emacs.d/init.el" buffer-file-truename)
               (setq imenu-generic-expression '((nil "(use-package \\(.*\\)" 1))))))
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (progn
+              (company-mode 1)
+              (auto-complete-mode 0))))
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (prettify-symbols-mode 1)))
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (rainbow-delimiters-mode 1)))
+
 
 ;; JIRA/Confluence markup
 ;; https://github.com/mnuessler/jira-markup-mode
@@ -911,43 +962,59 @@
 (use-package hippie-exp
   :bind ("\M- " . hippie-expand)
   :init
-  (setq hippie-expand-try-functions-list '(try-expand-dabbrev
-                                           try-expand-dabbrev-all-buffers
-                                           try-expand-dabbrev-from-kill
-                                           try-complete-file-name-partially
-                                           try-complete-file-name
-                                           try-expand-all-abbrevs
-                                           try-expand-list
-                                           try-expand-line
-                                           try-complete-lisp-symbol-partially
-                                           try-complete-lisp-symbol)))
+  (setq hippie-expand-try-functions-list
+        '(try-expand-dabbrev
+          try-expand-dabbrev-all-buffers
+          try-expand-dabbrev-from-kill
+          try-complete-file-name-partially
+          try-complete-file-name
+          try-expand-all-abbrevs
+          try-expand-list
+          try-expand-line
+          try-complete-lisp-symbol-partially
+          try-complete-lisp-symbol)))
 
-(global-set-key "\M- " 'hippie-expand)
+(global-set-key "\M- " #'hippie-expand)
 
 (global-set-key "\M-*" #'pop-tag-mark)
 
 ;; Perspectives for Emacs.
 ;; https://github.com/nex3/perspective-el
 (use-package perspective
-  :defer t)
+  :disabled
+  :defer t
+  :config
+  (persp-mode 1))
 
 (use-package projectile
   :ensure t
   :bind (:map projectile-mode-map
-              ("s-p" . projectile-persp-switch-project))
+              ("s-p"   . projectile-command-map)
+              ("C-c p" . projectile-command-map))
   :init
   ;; The default action is projectile-find-file. Switch to project
   ;; root directory instead.
-  (setq projectile-switch-project-action 'projectile-dired)
+  (setq projectile-switch-project-action #'projectile-dired)
   (add-hook 'projectile-after-switch-project-hook
             (lambda ()
               (go-set-project)))
   :config
-  ;; Counsel-projectile provides further ivy integration into projectile.
-  ;; https://github.com/ericdanan/counsel-projectile
-  (use-package counsel-projectile :defer t)
-  (counsel-projectile-mode)
-  (use-package persp-projectile :defer t))
+  (counsel-projectile-mode))
+
+;; Projectile integration for perspective.el.
+;; https://github.com/bbatsov/persp-projectile
+(use-package persp-projectile
+  :defer t
+  :after (perspective projectile))
+
+;; Counsel-projectile provides further ivy integration into projectile.
+;; https://github.com/ericdanan/counsel-projectile
+(use-package counsel-projectile
+  :defer t
+  :ensure t
+  :after projectile
+  :config
+  (counsel-projectile-mode))
 
 ;; Run ripgrep with Projectile
 ;; https://github.com/nlamirault/ripgrep.el/blob/master/projectile-ripgrep.el
@@ -1036,19 +1103,21 @@
 (use-package org-projectile
   :ensure t
   :pin elpa
-  :bind (("C-c n p" . org-projectile:project-todo-completing-read)
-         ("C-c c"   . org-capture))
+  :bind (("C-c c"   . org-capture)
+         ("C-c n p" . org-projectile-project-todo-completing-read))
+         
   :config
   (progn
     (setq org-projectile:projects-file "~/org/projects.org")
     (setq org-agenda-files (append org-agenda-files (org-projectile:todo-files)))
-    (add-to-list 'org-capture-templates (org-projectile:project-todo-entry "p"))))
+    (push (org-projectile-project-todo-entry) org-capture-templates)))
 
 ;; Practice touch/speed typing in Emacs.
 ;; https://github.com/parkouss/speed-type
 ;; Executing "M-x speed-type-text"" will start the typing exercise.
 (use-package speed-type
-  :defer t)
+  :defer t
+  :pin melpa)
 
 
 (use-package autodisass-java-bytecode
@@ -1102,14 +1171,7 @@
 ;; Protocol buffers
 (use-package protobuf-mode
   :defer t
-  :init
-  (defconst my-protobuf-style
-    '((c-basic-offset . 2)
-      (indent-tabs-mode . nil)))
-  :config
-  (add-hook 'protobuf-mode-hook
-            (lambda ()
-              (c-add-style "my-style" my-protobuf-style t))))
+  :ensure t)
 
 ;; Ruby
 ;; - ruby-mode is built-in
@@ -1277,7 +1339,9 @@
          ("C-<"         . mc/mark-previous-like-this)
          ("C-c C-<"     . mc/mark-all-like-this)
          ("C-c C->"     . mc/mark-all-like-this)
-         ("C-S-c C-S-c" . mc/edit-lines)))
+         ("C-S-c C-S-c" . mc/edit-lines)
+         ("C-M->"       . mc/edit-ends-of-lines)
+         ("C-M-<"       . mc/edit-beginnings-of-lines)))
 
 ;; Increase selected region by semantic units.
 ;; https://github.com/magnars/expand-region.el
@@ -1315,25 +1379,12 @@
 ;(el-get-bundle transponse-frames
 ;  :url "https://raw.githubusercontent.com/emacsmirror/emacswiki.org/master/transpose-frame.el")
 
-;; https://github.com/Fuco1/dired-hacks#dired-collapse
-(use-package dired-collapse
-  :ensure t
-  :init
-  (add-hook 'dired-mode-hook
-            (lambda ()
-              (dired-collapse-mode 1))))
-
-;(use-package dired+
-;  :defer t
-;  :ensure t
-;  :init
-;  (diredp-toggle-find-file-reuse-dir 1))
-
 ; Manage docker from Emacs.
 ; https://github.com/Silex/docker.el
 (use-package docker
+  :ensure t
   :config
-  (docker-global-mode))
+  :bind ("C-c d" . docker))
 
 ;; Interactively highlight which buffer is active by dimming the others.
 ;; https://github.com/gonewest818/dimmer.el
@@ -1407,8 +1458,13 @@
 ;; Emacs interface to Google Translate
 ;; https://github.com/atykhonov/google-translate
 (use-package google-translate
-  :bind (("C-c t" . google-translate-at-point)
-         ("C-c T" . google-translate-query-translate)))
+  :init
+  (require 'google-translate-smooth-ui)
+  ; Select translation direction using C-n and C-p
+  (setq google-translate-translation-directions-alist
+        '(("en" . "de") ("de" . "en")))
+  (setq google-translate-show-phonetic t)
+  :bind ("C-c t" . google-translate-smooth-translate))
 
 ;; Enforce rules for popup windows.
 ;; https://github.com/wasamasa/shackle
@@ -1430,3 +1486,92 @@
 ;; https://github.com/Fuco1/elisp-docstring-mode
 (use-package elisp-docstring-mode
   :ensure t)
+
+;; Source: https://stackoverflow.com/questions/9656311/conflict-resolution-with-emacs-ediff-how-can-i-take-the-changes-of-both-version/29757750#29757750
+(defun ediff-copy-both-to-C ()
+  (interactive)
+  (let ((a (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer))
+        (b (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer)))
+    (ediff-copy-diff ediff-current-difference nil 'C nil (concat a b))))
+
+  ;; (ediff-copy-diff ediff-current-difference nil 'C nil
+  ;;                  (concat
+  ;;                   (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
+  ;;                   (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
+; (defun add-d-to-ediff-mode-map () (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
+(add-hook 'ediff-keymap-setup-hook
+          (lambda ()
+            (define-key ediff-mode-map "d" 'ediff-copy-both-to-C)))
+
+;; http://commercialhaskell.github.io/intero/
+;; https://github.com/commercialhaskell/intero
+(use-package intero
+  :disabled
+  :init
+  (progn
+    (eval-after-load 'haskell-mode
+      '(add-hook 'haskell-mode-hook
+                 (lambda ()
+                   (intero-mode 1))))))
+
+;; Integrates eshell with bookmark.el.
+;; https://github.com/Fuco1/eshell-bookmark
+(use-package eshell-bookmark
+  :ensure t
+  :init
+  (add-hook 'eshell-mode-hook #'eshell-bookmark-setup))
+
+(let* ((etc-dir (expand-file-name "etc" dotfiles-dir))
+       (con-file (expand-file-name "sql-conns.el" etc-dir)))
+  (if (file-exists-p con-file)
+      (load-file con-file)))
+
+;; Drag stuff (words, region, lines) around in Emacs.
+;; https://github.com/rejeep/drag-stuff.el
+(use-package drag-stuff
+  :ensure t
+  :diminish drag-stuff-mode
+  :bind (("M-S-<up>"    . drag-stuff-up)
+         ("M-S-<down>"  . drag-stuff-down)
+         ("M-S-<left>"  . drag-stuff-left)
+         ("M-S-<right>" . drag-stuff-right))
+
+  :config
+  (drag-stuff-global-mode 1))
+
+(use-package forge-github
+  :disabled
+  :load-path "/home/matthias/projects/foss/forge/lisp")
+
+(use-package forge-bitbucket
+  :disabled
+  :load-path "/home/matthias/projects/foss/forge/lisp")
+
+;; Keep ~/.emacs.d clean.
+;; https://github.com/emacscollective/no-littering
+(use-package no-littering
+  :disabled)
+
+
+(use-package slack
+  :commands (slack-start)
+  :init
+  (setq slack-buffer-emojify t)
+  (setq slack-prefer-current-team t)
+  (setq slack-request-timeout 10000)
+  :config
+  (slack-register-team
+   :name "clojurians"
+   :default t
+   :client-id "63004d50-1541676708.024&_x_csid=axg3kCXnHPQ"
+   :client-secret ""
+   :token "xoxs-3883567535-322576429216-367833919651-cc4455a35282673011848dc4a14e5c32cc1638fc760a2d1b322389cae3523829"
+   :subscribed-channels '(clojured jobs remote-jobs)
+   :full-and-display-names t))
+
+(use-package alert
+  :commands (alert)
+  :init
+  (setq alert-default-style 'notifier))
+
+;;(setq epg-gpg-program "gpg2"
