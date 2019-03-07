@@ -6,10 +6,8 @@
                            ("marmalade"    . "https://marmalade-repo.org/packages/")
                            ("melpa"        . "https://melpa.org/packages/")
                            ("melpa-stable" . "https://stable.melpa.org/packages/")
-                           ("elpy"         . "https://jorgenschaefer.github.io/packages/")
                            ("org"          . "https://orgmode.org/elpa/"))
-        package-archive-priorities '(("elpy"         . 99)
-                                     ("org"          . 42)
+        package-archive-priorities '(("org"          . 42)
                                      ("melpa-stable" . 15)
                                      ("marmalade"    . 10)
                                      ("elpa"         . 5)
@@ -83,8 +81,8 @@
 
 (require 'appearance)
 
-;; Side-by-side diffs with ediff
-(setq ediff-split-window-function 'split-window-horizontally)
+(use-package diminish
+  :ensure t)
 
 (use-package smooth-scrolling
   :ensure t
@@ -116,11 +114,15 @@
 
 (use-package recentf
   :ensure t
-  :defer 0
   :config
-  (setq recentf-save-file (expand-file-name "recentf" dotfiles-dir)
-        recentf-max-saved-items 500
+  (setq recentf-max-saved-items 500
         recentf-max-menu-items 15
+        ;; Exclude some things from the list. Do "M-x recentf-cleanup"
+        ;; for changes to take effect immediately.
+        recentf-exclude '("^/var/folders\\.*"
+                          "COMMIT_EDITMSG\\'"
+                          ".*-autoloads\\.el\\'"
+                          "[/\\]\\.emacs.d/elpa/")
         ;; Disable recentf-cleanup on Emacs start, because it can
         ;; cause problems with remote files.
         recentf-auto-cleanup 'never)
@@ -144,11 +146,11 @@
 ;; Magit, a git porcelain inside Emacs.
 (use-package magit
   :ensure t
+  :defer t
   :bind ("C-x g" . magit-status))
 
 (use-package magit-gerrit
   :disabled
-  :ensure t
   :after magit
   :pin melpa)
 
@@ -200,16 +202,19 @@
 ;; Required by neotree icon theme and all-the-icons-dired-mode.
 ;; Requires installation of fonts to work correctly:
 ;; https://github.com/domtronn/all-the-icons.el/tree/master/fonts
-;;
-;; If icons are not displayed correctly, manually apply fix from:
-;; https://github.com/domtronn/all-the-icons.el/pull/106
+;; Installing Fonts:
+;;     M-x all-the-icons-install-fonts
 (use-package all-the-icons
-  :defer t
-  :after dired
+  :ensure t)
+
+;; https://github.com/jtbm37/all-the-icons-dired
+(use-package all-the-icons-dired
+  :ensure t
+  :after all-the-icons
   :diminish all-the-icons-dired-mode
-  :init
+  :config
   ;; Use icons in dired mode.
-  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
+  (add-hook 'dired-mode-hook #'all-the-icons-dired-mode))
 
 ;; Neotree. Available themes:
 ;; - classic (default)
@@ -220,6 +225,7 @@
 ;; TODO make it open in current project dir or dir of current file
 ;; https://emacs.stackexchange.com/questions/29499/how-to-toggle-neotree-in-the-project-directory
 (use-package neotree
+  :ensure t
   :init
   (setq neo-theme (if (display-graphic-p) 'nerd 'ascii))
   :bind ([f8] . neotree-toggle))
@@ -238,6 +244,7 @@
 ;; GitHub: https://github.com/abo-abo/swiper
 ;; Doc: http://oremacs.com/swiper/
 (use-package swiper
+  :ensure t
   :init
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
@@ -250,6 +257,8 @@
 ;; https://github.com/abo-abo/swiper#counsel
 (use-package counsel
   :ensure t
+  :bind (("C-x C-i" . imenu)
+	 ("C-x C-r" . counsel-recentf))
   :init
   (counsel-mode 1)
   :diminish counsel-mode)
@@ -270,7 +279,7 @@
   :bind ("C-x M" . mu4e)
   :init
   ;; folders
-  (setq mu4e-maildir "/home/matthias/Maildir"
+  (setq mu4e-maildir "~/Mail/egym"
         mu4e-drafts-folder "/[Gmail].Drafts"
         mu4e-sent-folder   "/[Gmail].Sent Mail"
         mu4e-trash-folder  "/[Gmail].Trash")
@@ -537,6 +546,7 @@
 ;; https://github.com/clojure-emacs/cider
 ;; https://cider.readthedocs.io/en/latest/
 (use-package cider
+  :ensure t
   :init
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook      #'company-mode)
@@ -622,6 +632,7 @@
 ;; Display available keybindings in popup.
 ;; https://github.com/justbur/emacs-which-key
 (use-package which-key
+  :ensure t
   :init
   ;; Set the time delay (in seconds) for the which-key popup to appear.
   (setq which-key-idle-delay 2.5)
@@ -748,30 +759,39 @@
 ;; https://github.com/rust-lang/rust-mode
 ;; https://github.com/kwrooijen/cargo.el/blob/master/cargo.el
 (use-package rust-mode
+  :ensure t
   :mode "\\.rs\\'"
   :config
-  (use-package cargo)
-  (add-hook 'rust-mode-hook 'cargo-minor-mode)
-  ;; https://github.com/racer-rust/racer
-  ;; Installation:
-  ;;   $ cargo install racer
-  ;; Configuration:
-  ;;   $ rustup component add rust-src
-  ;;   $ export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
-  (use-package racer
-    :bind (:map rust-mode-map
-                ("TAB" . company-indent-or-complete-common))
-    :init
-    (add-hook 'rust-mode-hook #'racer-mode)
-    (add-hook 'racer-mode-hook #'eldoc-mode)
-    (add-hook 'racer-mode-hook #'company-mode)
-    (setq company-tooltip-align-annotations t))
   (setq rust-format-on-save t))
 
-
+(use-package cargo
+  :ensure t
+  :after rust-mode
+  :config
+  (add-hook 'rust-mode-hook #'cargo-minor-mode))
+
+;; https://github.com/racer-rust/racer
+;; Installation:
+;;   $ cargo install racer
+;; Configuration:
+;;   $ rustup component add rust-src
+;;   $ export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
+(use-package racer
+  :ensure t
+  :after rust-mode
+  :bind (:map rust-mode-map
+              ("TAB" . company-indent-or-complete-common))
+  :init
+  (add-hook 'rust-mode-hook #'racer-mode)
+  (add-hook 'rust-mode-hook #'flycheck-mode)
+  (add-hook 'racer-mode-hook #'eldoc-mode)
+  (add-hook 'racer-mode-hook #'company-mode)
+  (setq company-tooltip-align-annotations t))
+
 ;; Swift.
 ;; https://github.com/swift-emacs/swift-mode
 (use-package swift-mode
+  :ensure t
   :mode "\\.swift\\'")
 
 ;; https://github.com/swift-emacs/flycheck-swift
@@ -784,6 +804,7 @@
 ;; OSX only. Only works when there is a *.xcodeproj up the directory tree.
 ;; https://github.com/nathankot/company-sourcekit
 (use-package company-sourcekit
+  :ensure t
   :if (memq window-system '(mac ns))
   :after company
   :init
@@ -793,6 +814,7 @@
 ;; http://ledger-cli.org/3.0/doc/ledger-mode.html
 ;; https://github.com/purcell/flycheck-ledger
 (use-package ledger-mode
+  :ensure t
   :mode "\\.ledger\\'"
   :config
   (add-hook 'ledger-mode-hook
@@ -813,16 +835,9 @@
 
 ;; Golang
 ;; https://github.com/dominikh/go-mode.el
-;; auto-complete-mode
-;; flycheck-mode
-;;
-;;
-;; go get -u github.com/nsf/gocode
-;; go get golang.org/x/tools/cmd/guru
-;;
-;; Go guru - integration of the Go 'guru' analysis tool
-;; https://github.com/dominikh/go-mode.el/blob/master/go-guru.el
 (use-package go-mode
+  :ensure t
+  :after lsp-mode
   ;; To jump back after using godef-jump.
   :bind ("M-*" . pop-tag-mark)
   :init
@@ -831,44 +846,83 @@
   (add-hook 'go-mode-hook
             (lambda ()
               (progn
-                (flycheck-mode 1)
-                (go-eldoc-setup)
-                (go-guru-hl-identifier-mode)
-                (rainbow-delimiters-mode-enable)
                 (local-set-key (kbd "M-.") #'godef-jump)
                 (local-set-key (kbd "M-*") #'pop-tag-mark)
                 (local-set-key (kbd "M-p") 'compile)            ; Invoke compiler
                 (local-set-key (kbd "M-P") 'recompile)          ; Redo most recent compile cmd
                 (local-set-key (kbd "M-]") 'next-error)         ; Go to next error (or msg)
                 (local-set-key (kbd "M-[") 'previous-error)
+                (go-guru-hl-identifier-mode)
+                (flycheck-mode 1)
+		(company-mode 1)
+		(lsp)
                 (if (not (string-match "go" compile-command))
                     (set (make-local-variable 'compile-command)
-                         "go build -v && go test -v && go vet")))))
-  :config
-  ;; https://github.com/alecthomas/gometalinter
-  ;; go get -u github.com/alecthomas/gometalinter
-  ;; gometalinter --install
-  (use-package flycheck-gometalinter)
-  (use-package auto-complete)
-  (use-package go-autocomplete)
-  (use-package go-guru)
-  ;; Integration of the 'gorename' tool into Emacs.
-  ;; https://github.com/dominikh/go-mode.el/blob/master/go-rename.el
-  ;; % go get golang.org/x/tools/cmd/gorename
-  ;; % go build golang.org/x/tools/cmd/gorename
-  ;; % mv gorename $HOME/bin/         # or elsewhere on $PATH
-  (use-package go-rename))
-  ;;
-  ;; https://github.com/syohex/emacs-go-eldoc
-  ;; Dependencies:
-  ;; - gocode: go get -u github.com/nsf/gocode
-;;  (use-package go-eldoc
-;;    :init
-;;    (add-hook 'go-mode-hook #'go-eldoc-setup)))
+                         "go build -v && go test -v && go vet"))))))
 
-;(require 'go-autocomplete)
-(require 'auto-complete-config)
-(ac-config-default)
+;; Dependencies:
+;; go get -u github.com/mdempsky/gocode
+;; (not maintained anymore: github.com/nsf/gocode)
+(use-package go-autocomplete
+  :disabled
+  :ensure t
+  :pin melpa
+  :after go-mode
+  :init
+  (add-hook 'go-mode-hook
+	    (lambda ()
+              (company-mode 1)
+	      (ac-config-default))))
+
+;(require 'auto-complete-config)
+
+;(use-package auto-complete-config)
+
+;; go get -u github.com/mdempsky/gocode
+;; (not maintained anymore: github.com/nsf/gocode)
+;; go install -pkgdir vendor/
+(use-package company-go
+  :disabled
+  :ensure t
+  :pin melpa
+  :after go-mode
+  :init
+  (add-hook 'go-mode-hook
+	    (lambda ()
+	      ; Use company-go as the only backend
+              (set (make-local-variable 'company-backends) '(company-go))
+              (company-mode 1)))
+  (setq company-tooltip-limit 20)                       ; bigger popup window
+  (setq company-idle-delay .3)                          ; decrease delay before autocompletion popup shows
+  (setq company-echo-delay 0)                           ; remove annoying blinking
+  (setq company-begin-commands '(self-insert-command))) ; start autocompletion only after typing)
+
+;; https://github.com/syohex/emacs-go-eldoc
+(use-package go-eldoc
+  :after go-mode
+  :init
+  (add-hook 'go-mode-hook #'go-eldoc-setup))
+
+;; https://github.com/alecthomas/gometalinter
+;; go get -u github.com/alecthomas/gometalinter
+;; gometalinter --install 
+(use-package flycheck-gometalinter
+  :ensure t
+  :after go-mode)
+
+;; Integration of the 'gorename' tool into Emacs.
+;; https://github.com/dominikh/go-mode.el/blob/master/go-rename.el
+;; % go get golang.org/x/tools/cmd/gorename
+;; % go build golang.org/x/tools/cmd/gorename
+;; % mv gorename $HOME/bin/         # or elsewhere on $PATH
+(use-package go-rename
+  :after go-mode)
+
+;; Go guru - integration of the Go 'guru' analysis tool
+;; https://github.com/dominikh/go-mode.el/blob/master/go-guru.el
+;; go get golang.org/x/tools/cmd/guru
+(use-package go-guru
+  :ensure t)
 
 ; Move point through buffer-undo-list positions.
 ; https://github.com/camdez/goto-last-change.el
@@ -878,18 +932,14 @@
 
 ; Swap buffers without typing C-x b on each window.
 (use-package buffer-move
+  :ensure t
   :bind (("C-S-<up>"    . buf-move-up)
          ("C-S-<down>"  . buf-move-down)
          ("C-S-<left>"  . buf-move-left)
          ("C-S-<right>" . buf-move-right)))
 
-; Imenu tag selection a la ido.
-(use-package idomenu
-  :ensure t
-  :bind ("C-x C-i" . idomenu))
-
 ;; JSON
-;; (json.el is part of GNU Emacs since 23.1)
+;; (json.el is part of GNU Emacs since 23.1) 
 (add-hook 'json-mode-hook #'flycheck-mode)
 (add-hook 'json-mode-hook
           (lambda ()
@@ -914,7 +964,8 @@
             ;;          (lambda ()
             ;;            (byte-force-recompile default-directory)))
             ;; Indent line after pressing ENTER.
-            (define-key emacs-lisp-mode-map "\r" 'reindent-then-newline-and-indent)))
+            (define-key emacs-lisp-mode-map "\r" 'reindent-then-newline-and-indent)
+	    (company-mode 1)))
 (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
 ;; Turn on 'flyspell-mode' for comments and strings.
 ;; Requires Ispell: apt-get install ispell
@@ -988,48 +1039,41 @@
 
 (use-package projectile
   :ensure t
-  :bind (:map projectile-mode-map
-              ("s-p"   . projectile-command-map)
-              ("C-c p" . projectile-command-map))
-  :init
-  ;; The default action is projectile-find-file. Switch to project
-  ;; root directory instead.
-  (setq projectile-switch-project-action #'projectile-dired)
-  (add-hook 'projectile-after-switch-project-hook
-            (lambda ()
-              (go-set-project)))
+;;  :bind (:map projectile-mode-map
+;;              (("s-p"   . projectile-command-map)
+;;               ("C-c p" . projectile-command-map)))
   :config
-  (counsel-projectile-mode))
-
-;; Projectile integration for perspective.el.
-;; https://github.com/bbatsov/persp-projectile
-(use-package persp-projectile
-  :defer t
-  :after (perspective projectile))
+  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  (projectile-mode +1))
 
 ;; Counsel-projectile provides further ivy integration into projectile.
 ;; https://github.com/ericdanan/counsel-projectile
 (use-package counsel-projectile
-  :defer t
   :ensure t
   :after projectile
   :config
-  (counsel-projectile-mode))
+  (counsel-projectile-mode +1))
+
+;; (use-package persp-projectile
+;;   :disabled
+;;   :defer t
+;;   :after projectile)
 
 ;; Run ripgrep with Projectile
 ;; https://github.com/nlamirault/ripgrep.el/blob/master/projectile-ripgrep.el
 (use-package projectile-ripgrep
+  :ensure t
   :after projectile)
-
-;;(global-set-key (kbd "C-x M") 'mu4e)
 
 ;; https://lars.ingebrigtsen.no/2014/11/13/welcome-new-emacs-developers/
 
 ;; Use Groovy mode for Gradle build files.
 (use-package groovy-mode
   :defer t
-  :mode (("\\.groovy"    . groovy-mode)
-	 ("build.gradle" . groovy-mode)))
+  :ensure t
+  :mode (("\\.groovy" . groovy-mode)
+	 ("\\.gradle" . groovy-mode)))
 
 ;; Use Ibuffer for Buffer List.
 ;; Some ibuffer tips: http://martinowen.net/blog/2010/02/03/tips-for-emacs-ibuffer.html
@@ -1056,6 +1100,7 @@
 ;; running YAPF on a buffer before saving
 ;; https://github.com/JorisE/yapfify
 (use-package yapfify
+  :ensure t
   :init
   (add-hook 'python-mode-hook 'yapf-mode))
 
@@ -1100,17 +1145,16 @@
 
 ;; Manage org-mode TODOs for your projectile projects.
 ;; https://github.com/IvanMalison/org-projectile
-(use-package org-projectile
-  :ensure t
-  :pin elpa
-  :bind (("C-c c"   . org-capture)
-         ("C-c n p" . org-projectile-project-todo-completing-read))
-         
-  :config
-  (progn
-    (setq org-projectile:projects-file "~/org/projects.org")
-    (setq org-agenda-files (append org-agenda-files (org-projectile:todo-files)))
-    (push (org-projectile-project-todo-entry) org-capture-templates)))
+;; (use-package org-projectile
+;;   :ensure t
+;;   :pin elpa
+;;   :bind (("C-c n p" . org-projectile:project-todo-completing-read)
+;;          ("C-c c"   . org-capture))
+;;   :config
+;;   (progn
+;;     (setq org-projectile:projects-file "~/org/projects.org"
+;;           org-agenda-files (append org-agenda-files (org-projectile:todo-files)))
+;;     (add-to-list 'org-capture-templates (org-projectile:project-todo-entry "p"))))
 
 ;; Practice touch/speed typing in Emacs.
 ;; https://github.com/parkouss/speed-type
@@ -1134,6 +1178,7 @@
 ;; Meghanada: Java Development Environment for Emacs.
 ;; https://github.com/mopemope/meghanada-emacs
 (use-package meghanada
+  :ensure t
   :defer t)
 
 ;;;;;;;;;;;;;
@@ -1212,6 +1257,7 @@
   ;; Simple Emacs interface to RuboCop
   ;; https://github.com/bbatsov/rubocop-emacs
   (use-package rubocop
+    :ensure t
     :init
     (add-hook 'ruby-mode-hook #'rubocop-mode)))
 
@@ -1225,6 +1271,7 @@
 ;; python, jade, etc).
 ;; https://gitlab.com/emacs-stuff/indent-tools
 (use-package indent-tools
+  :ensure t
   :init
   (global-set-key (kbd "C-c >") 'indent-tools-hydra/body))
 
@@ -1238,6 +1285,7 @@
 ;; Browse Dash docsets using Ivy.
 ;; https://github.com/nathankot/counsel-dash
 (use-package counsel-dash
+  :ensure t
   :bind ("C-c C-D" . counsel-dash)
   :init
   (add-hook 'python-mode-hook
@@ -1324,6 +1372,7 @@
   ;; https://github.com/kyagi/shell-pop-el/issues/51
   (push (cons "\\*shell\\*" display-buffer--same-window-action) display-buffer-alist))
 
+;; https://github.com/emacsmirror/git-timemachine
 (use-package git-timemachine
   :ensure t
   :defer t
@@ -1351,6 +1400,7 @@
   :bind (("C-=" . er/expand-region)
          ("C-+" . er/contract-region)))
 
+;; https://github.com/Fuco1/smartparens
 (use-package smartparens
   :ensure t
   :diminish smartparens-mode
@@ -1426,6 +1476,14 @@
 ;; Preserve the scratch buffer across Emacs sessions.
 ;; https://github.com/Fanael/persistent-scratch
 (use-package persistent-scratch
+  :ensure t
+  :config
+  (setq persistent-scratch-autosave-interval 60)
+  (persistent-scratch-setup-default))
+
+;; Preserve the scratch buffer across Emacs sessions.
+;; https://github.com/Fanael/persistent-scratch
+(use-package persistent-scratch
   :pin melpa
   :init
   (persistent-scratch-setup-default))
@@ -1444,20 +1502,10 @@
 ;;            (lambda ()
 ;;              (add-hook 'before-save-hook 'elixor-format-before-save))))
 
-(use-package sqlup-mode
-  :disabled
-  :init
-  ;; Capitalize keywords in SQL mode
-  (add-hook 'sql-mode-hook 'sqlup-mode)
-  ;; Capitalize keywords in an interactive session (e.g. psql)
-  (add-hook 'sql-interactive-mode-hook 'sqlup-mode)
-  ;; Set a global keyword to use sqlup on a region
-  (global-set-key (kbd "C-c u") 'sqlup-capitalize-keywords-in-region)
-  (add-to-list 'sqlup-blacklist "User"))
-
 ;; Emacs interface to Google Translate
 ;; https://github.com/atykhonov/google-translate
 (use-package google-translate
+  :ensure t
   :init
   (require 'google-translate-smooth-ui)
   ; Select translation direction using C-n and C-p
@@ -1474,6 +1522,7 @@
 ;;   (add-to-list 'shackle-rules '("\\*shell-1\\*" :regexp t :same t)))
 
 (use-package bash-completion
+  :ensure t
   :init
   (bash-completion-setup))
 
@@ -1539,20 +1588,6 @@
   :config
   (drag-stuff-global-mode 1))
 
-(use-package forge-github
-  :disabled
-  :load-path "/home/matthias/projects/foss/forge/lisp")
-
-(use-package forge-bitbucket
-  :disabled
-  :load-path "/home/matthias/projects/foss/forge/lisp")
-
-;; Keep ~/.emacs.d clean.
-;; https://github.com/emacscollective/no-littering
-(use-package no-littering
-  :disabled)
-
-
 (use-package slack
   :commands (slack-start)
   :init
@@ -1575,3 +1610,118 @@
   (setq alert-default-style 'notifier))
 
 ;;(setq epg-gpg-program "gpg2"
+
+;; Keep ~/.emacs.d clean.
+;; https://github.com/emacscollective/no-littering
+(use-package no-littering
+  :ensure t
+  :after recentf
+  :config
+  (add-to-list 'recentf-exclude no-littering-var-directory)
+  (add-to-list 'recentf-exclude no-littering-etc-directory))
+
+(use-package lsp-mode
+  :ensure t
+  :commands lsp)
+
+(use-package lsp-ui
+  :ensure t
+  :after lsp-mode
+  :commands lsp-ui-mode)
+
+(use-package company-lsp
+  :ensure t
+  :after lsp-mode
+  :commands company-lsp)
+
+(use-package lsp-java
+  :ensure t
+  :after (lsp-mode java-mode)
+  :config
+  (add-hook 'java-mode-hook #'lsp))
+
+(use-package dap-mode
+  :ensure t
+  :after lsp-mode
+  :config
+  (dap-mode 1)
+  (dap-ui-mode 1))
+
+;(use-package dap-java
+;  :ensure t
+;  :after (lsp-java))
+
+(use-package lsp-java-treemacs
+  :disabled
+  :after (treemacs))
+
+;; https://github.com/Alexander-Miller/treemacs
+(use-package treemacs
+  :ensure t
+  :defer t)
+
+(use-package treemacs-magit
+  :ensure t
+  :defer t
+  :after (treemacs magit))
+
+;; (use-package treemacs-projectile
+;;   :ensure t
+;;   :defer t
+;;   :after (treemacs projectile))
+
+;; https://github.com/elixir-editors/emacs-elixir
+(use-package elixir-mode
+  :ensure t
+  :defer t
+  :after smartparens
+  :config
+  (add-hook 'elixir-mode-hook
+	    (lambda ()
+	      (smartparens-strict-mode 1))))
+
+;; Elixir tooling integration into Emacs
+;; https://alchemist.readthedocs.io
+(use-package alchemist
+  :ensure t
+  :defer t)
+
+(use-package git-gutter
+  :ensure t
+  :bind (("C-x v =" . git-gutter:popup-hunk)
+	 ;; Stage current hunk
+	 ("C-x v s" . git-gutter:stage-hunk)
+	 ;; Revert current hunk
+	 ("C-x v r" . git-gutter:revert-hunk)
+	 ;; Mark current hunk
+	 ("C-x v SPC" . git-gutter:mark-hunk)
+	 ;; Jump to next/previous hunk
+	 ("C-x p" . git-gutter:previous-hunk)
+	 ("C-x n" . git-gutter:next-hunk))
+  :config
+  (global-git-gutter-mode +1))
+
+;; https://github.com/Alexander-Miller/company-shell
+(use-package company-shell
+  :ensure t
+  :after company-mode
+  :init
+  (add-to-list 'company-backends '(company-shell company-shell-env)))
+
+(use-package smart-mode-line
+  :ensure t)
+
+;; https://emacs.stackexchange.com/questions/281/how-do-i-get-a-fancier-mode-line-that-uses-solid-colors-and-triangles
+;;(setq powerline-arrow-shape 'curve)
+;;(setq powerline-default-separator-dir '(left . right))
+;;(setq powerline-image-apple-rgb t)
+
+;; Jump to things in Emacs tree-style (similar to ace-jump-mode).
+;; https://github.com/abo-abo/avy
+(use-package avy
+  :ensure t
+  :bind (("C-:"   . avy-goto-char)
+         ("C-'"   . avy-goto-char-2)
+         ("M-g f" . avy-goto-line)
+         ("M-g w" . avy-goto-word-1)
+         ("M-g e" . avy-goto-word-0)))

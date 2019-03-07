@@ -2,26 +2,25 @@
 \#*#
 /.places
 /site-lisp/.thesaurus.cache
-/org-clock-save.el
 /url/cookies
 /semanticdb
 /tramp
 /ac-comphist.dat
 /elpa
-/var
 
 /.cask/
 /.python-environments/
 /eshell/
 /session.*
-/xkcd
 /persp-confs
 /bookmarks
 /projectile-bookmarks.eld
 /recentf
-/speed-type
 /meghanada
 /network-security.data
 /.edbi-ds-history
 /image-dired
-/magithub/cache
+
+# Here, no-litterling.el keeps all the stuff.
+# https://github.com/emacscollective/no-littering
+/var
