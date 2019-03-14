@@ -162,8 +162,11 @@
   (magithub-feature-autoinject t)
   (setq magithub-clone-default-directory "~/projects"))
 
+;; Emacs porcelain for Kubernetes
+;; https://github.com/chrisbarrett/kubernetes-el/commits/master
 (use-package kubernetes
   :ensure t
+  :pin melpa
   :commands (kubernetes-overview))
 
 (use-package ace-jump-mode
@@ -171,6 +174,7 @@
   :bind ("C-c SPC" . ace-jump-mode))
 
 (use-package ace-mc
+  :ensure t
   :bind (("C-)"   . ace-mc-add-multiple-cursors)
          ("C-M-)" . ace-mc-add-single-cursor)))
 
@@ -181,12 +185,13 @@
   :ensure t
   :config
   (exec-path-from-shell-initialize)
-  (exec-path-from-shell-copy-env "GOPATH")
-  (exec-path-from-shell-copy-env "GOROOT")
-  (exec-path-from-shell-copy-env "JAVA_HOME")
-  (exec-path-from-shell-copy-env "PYTHONPATH")
-  (exec-path-from-shell-copy-env "WORKON_HOME")
-  (exec-path-from-shell-copy-env "RUST_SRC_PATH"))
+  (mapc 'exec-path-from-shell-copy-env
+        '("GOPATH"
+          "GOROOT"
+          "JAVA_HOME"
+          "PYTHONPATH"
+          "WORKON_HOME"
+          "RUST_SRC_PATH")))
 
 (use-package edit-server
   :if window-system
@@ -1279,8 +1284,15 @@
   :if (and window-system (eq system-type 'gnu/linux))
   :pin melpa)
 
+;; Search the word at point with Dash
+;; https://github.com/stanaka/dash-at-point
 (use-package dash-at-point
-  :if (and window-system (eq system-type 'darwin)))
+  :ensure t
+  :defer t
+  :if (and window-system (eq system-type 'darwin))
+  :commands dash-at-point
+  :bind (("C-c d" . dash-at-point)
+         ("C-c e" . dash-at-point-with-docset)))
 
 ;; Browse Dash docsets using Ivy.
 ;; https://github.com/nathankot/counsel-dash
@@ -1434,7 +1446,7 @@
 (use-package docker
   :ensure t
   :config
-  :bind ("C-c d" . docker))
+  :bind ("C-c C" . docker))
 
 ;; Interactively highlight which buffer is active by dimming the others.
 ;; https://github.com/gonewest818/dimmer.el
