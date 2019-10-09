@@ -223,3 +223,10 @@ See also: `my/escape-quotes'"
   (interactive "p")
   (save-column
    (kill-whole-line arg)))
+
+;; Source: https://stackoverflow.com/questions/4987760/how-to-change-size-of-split-screen-emacs-windows/4988206
+(defun halve-other-window-height ()
+  "Expand current window to use half of the other window's lines."
+  (interactive)
+  (enlarge-window (/ (window-height (next-window)) 2)))
+

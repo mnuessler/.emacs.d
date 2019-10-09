@@ -25,7 +25,7 @@
 ;;(define-key php-mode-map (kbd "RET") 'newline-and-indent)
 
 ;; show buffer file name in mini-buffer
-(global-set-key "\C-cz" 'show-file-name)
+(global-set-key (kbd "C-c z") 'show-file-name)
 
 ;; insert German umlauts without switching the keyboard layout
 ;; (require 'iso-insert)
@@ -54,5 +54,16 @@
 ;; Bind a key for imenu, but use counsel.
 (global-set-key (kbd "M-i") 'counsel-imenu)
 (global-set-key (kbd "C-x C-r") 'counsel-recentf)
+
+;; Expand current window to use half of the other window's lines.
+(global-set-key (kbd "C-c v") 'halve-other-window-height)
+
+;; Scroll by line
+;; Source: https://stackoverflow.com/questions/1128927/how-to-scroll-line-by-line-in-gnu-emacs
+(global-set-key (kbd "M-<down>") 'scroll-up-line)
+(global-set-key (kbd "M-<up>") 'scroll-down-line)
+
+;; Toggle fullscreen (function in misc-defuns.el)
+(global-set-key (kbd "C-x 5 9") 'toggle-frame-fullscreen)
 
 (provide 'key-bindings)

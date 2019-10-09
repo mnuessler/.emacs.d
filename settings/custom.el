@@ -38,6 +38,9 @@
  '(custom-safe-themes
    (quote
     ("f5512c02e0a6887e987a816918b7a684d558716262ac7ee2dd0437ab913eaec6" default)))
+ '(ediff-show-ancestor nil)
+ '(ediff-split-window-function (quote split-window-horizontally))
+ '(ediff-window-setup-function (quote ediff-setup-windows-plain))
  '(elfeed-goodies/entry-pane-position (quote bottom))
  '(elpy-rpc-python-command "python3")
  '(git-commit-setup-hook
@@ -46,12 +49,17 @@
  '(go-guess-gopath-functions
    (quote
     (go-dep-gopath go-gb-gopath go-godep-gopath go-wgo-gopath go-plain-gopath)))
+ '(gofmt-command "gofmt")
  '(kubernetes-kubectl-executable "/home/matthias/google-cloud-sdk/bin/kubectl")
+ '(lsp-clients-go-server "gopls")
+ '(lsp-ui-doc-delay 0.8)
+ '(lsp-ui-doc-max-width 75)
+ '(lsp-ui-sideline-ignore-duplicate t)
  '(neo-smart-open t)
  '(nxml-slash-auto-complete-flag t)
  '(package-selected-packages
    (quote
-    (kubernetes bash-completion google-translate company-sourcekit drag-stuff eshell-bookmark elisp-docstring-mode string-edit flycheck-yamllint el-get autodisass-java-bytecode dired-collapse persistent-scratch git-timemachine editorconfig projectile company-shell org-present dimmer git-gutter alchemist elixir-mode smartparens-mode treemacs-magit treemacs lsp-java-treemacs dap-java dap-mode lsp-java lsp-ui company-lsp lsp-go lsp-mode go-autocomplete no-littering company-go go-company ob-elixir ob-swift powerline magit java-mode docker-compose-mode ob-http ob-ipython ob-mongo ac-octave ob-go ob-prolog ob-redis ob-rust ob-sql-mode ssh-tunnels edbi dash-at-point realgud counsel-dash racer zeal-at-point go-rename indent-tools flymake-shell elfeed-org yapfify go-eldoc robe rvm flymake-ruby inf-ruby rubocop protobuf-mode 2048-game lua-mode auctex highlight-indentation-mode shm meghanada speed-type org elfeed-goodies elfeed edit-server indium magit-tramp magithub highlight-symbol gitattributes-mode gitignore-mode elpy flycheck-mypy jedi magit-gh-pulls ibuffer-projectile groovy-mode counsel-projectile esup ereader jira-markup-mode command-log-mode buffer-move goto-last-change magit-gerrit dired-imenu idomenu go-guru flycheck-gometalinter ag go-mode company-ansible company-restclient clojure-cheatsheet rainbow-delimiters smartparens zenburn-theme flycheck-ledger ledger-mode swift-mode cargo rust-mode gist persp-mode persp-mode-projectile-bridge prolog scala-mode toml-mode hackernews haskell-mode hacker-typer crontab-mode ssh-config-mode apache-mode nginx-mode xkcd csv-mode which-key ac-php markdown-mode plantuml-mode php-mode web-mode zencoding-mode js2-mode company cider terminal-here highlight-indentation yaml-mode ob-restclient yasnippet dired+ ansible window-numbering bookmark+ back-button gitconfig-mode browse-kill-ring smooth-scrolling mu4e-maildirs-extension ace-flyspell guess-language slack nyan-mode all-the-icons all-the-icons-dired diminish exec-path-from-shell ace-jump-mode ace-mc docker docker-tramp dockerfile-mode emacs-xkcd embrace neotree anti-zenburn-theme expand-region shell-pop undo-tree multiple-cursors ansible-doc ansible-vault smart-mode-line smart-mode-line-powerline-theme use-package)))
+    (minions anki-editor coffee-mode org-projectile feature-mode yasnippet-snippets lispy lsp-java company-lsp lsp-ui racer flycheck-gometalinter flycheck-golangci-lint company-quickhelp company-terraform terraform-mode flycheck-kotlin kotlin-mode helpful mutt-mode ace-link org-bookmark-heading dap-mode dap-go deadgrep kubernetes bash-completion google-translate company-sourcekit drag-stuff eshell-bookmark elisp-docstring-mode string-edit flycheck-yamllint el-get autodisass-java-bytecode dired-collapse persistent-scratch git-timemachine editorconfig projectile company-shell org-present dimmer git-gutter alchemist elixir-mode smartparens-mode treemacs-magit treemacs lsp-java-treemacs dap-java go-autocomplete no-littering company-go go-company ob-elixir ob-swift powerline magit java-mode docker-compose-mode ob-http ob-ipython ob-mongo ac-octave ob-go ob-prolog ob-redis ob-rust ob-sql-mode ssh-tunnels edbi dash-at-point realgud counsel-dash zeal-at-point go-rename indent-tools flymake-shell elfeed-org yapfify go-eldoc robe rvm flymake-ruby inf-ruby rubocop protobuf-mode 2048-game lua-mode auctex highlight-indentation-mode shm meghanada speed-type org elfeed-goodies elfeed edit-server indium magit-tramp magithub highlight-symbol gitattributes-mode gitignore-mode elpy flycheck-mypy jedi magit-gh-pulls ibuffer-projectile groovy-mode counsel-projectile esup ereader jira-markup-mode command-log-mode buffer-move goto-last-change magit-gerrit dired-imenu idomenu go-guru ag go-mode company-ansible company-restclient clojure-cheatsheet rainbow-delimiters smartparens zenburn-theme flycheck-ledger ledger-mode swift-mode cargo rust-mode gist persp-mode persp-mode-projectile-bridge prolog scala-mode toml-mode hackernews haskell-mode hacker-typer crontab-mode ssh-config-mode apache-mode nginx-mode xkcd csv-mode which-key ac-php markdown-mode plantuml-mode php-mode web-mode zencoding-mode js2-mode company cider terminal-here highlight-indentation yaml-mode ob-restclient yasnippet dired+ ansible window-numbering bookmark+ back-button gitconfig-mode browse-kill-ring smooth-scrolling mu4e-maildirs-extension ace-flyspell guess-language slack nyan-mode all-the-icons all-the-icons-dired diminish exec-path-from-shell ace-jump-mode ace-mc docker docker-tramp dockerfile-mode emacs-xkcd embrace neotree anti-zenburn-theme expand-region shell-pop undo-tree multiple-cursors ansible-doc ansible-vault smart-mode-line smart-mode-line-powerline-theme use-package)))
  '(racer-rust-src-path
    "~/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src")
  '(safe-local-variable-values
@@ -62,6 +70,7 @@
  '(shell-pop-window-position "bottom")
  '(show-paren-mode t)
  '(sql-mysql-options (quote ("--protocol=tcp")))
+ '(terraform-indent-level 2)
  '(whitespace-style (quote (trailing space-before-tab empty)))
  '(yas-snippet-dirs
    (quote

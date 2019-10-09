@@ -31,6 +31,9 @@
 (setq dotfiles-dir (file-name-directory
                     (or (buffer-file-name) load-file-name)))
 
+;; Determine HOME dir.
+(setq home-dir (getenv "HOME"))
+
 ;; Keep Custom-settings in a separate file
 (setq custom-file (expand-file-name "custom.el" (expand-file-name "settings" dotfiles-dir)))
 (load custom-file)
@@ -112,24 +115,45 @@
   :config
   (window-numbering-mode 1))
 
+;; Keep ~/.emacs.d clean.
+;; https://github.com/emacscollective/no-littering
+(use-package no-littering
+  :ensure t)
+
 (use-package recentf
   :ensure t
+  :after no-littering
   :config
   (setq recentf-max-saved-items 500
         recentf-max-menu-items 15
-        ;; Exclude some things from the list. Do "M-x recentf-cleanup"
-        ;; for changes to take effect immediately.
-        recentf-exclude '("^/var/folders\\.*"
-                          "COMMIT_EDITMSG\\'"
-                          ".*-autoloads\\.el\\'"
-                          "[/\\]\\.emacs.d/elpa/")
         ;; Disable recentf-cleanup on Emacs start, because it can
         ;; cause problems with remote files.
         recentf-auto-cleanup 'never)
+  ;; Exclude some things from the list. Do "M-x recentf-cleanup"
+  ;; for changes to take effect immediately.
+  (add-to-list 'recentf-exclude no-littering-var-directory)
+  (add-to-list 'recentf-exclude no-littering-etc-directory)
+  (add-to-list 'recentf-exclude "^/var/folders\\.*")
+  (add-to-list 'recentf-exclude "COMMIT_EDITMSG\\'")
+  (add-to-list 'recentf-exclude "-autoloads\\.el\\'")
+  (add-to-list 'recentf-exclude "\\.signature\\'")
+  (add-to-list 'recentf-exclude (expand-file-name "elpa/" dotfiles-dir))
   (recentf-mode +1))
 
 ;; Get side-by-side diffs
 (setq ediff-split-window-function 'split-window-horizontally)
+;; Make wide display in ediff behave correctly with multiple screens.
+(add-hook 'ediff-mode-hook 'ediff-fullscreen-as-wide-display)
+
+(use-package company
+  :ensure t
+  :bind (:map company-search-map
+              ("C-t" . company-search-toggle-filtering)
+              ("C-n" . company-select-next)
+              ("C-p" . company-select-previous)
+              :map company-active-map
+              ("C-n" . company-select-next)
+              ("C-p" . company-select-previous)))
 
 ;; Modes for various git configuration files.
 ;; https://github.com/magit/git-modes
@@ -326,7 +350,7 @@
 
   ;; define email signature, but don't include it automatically
   (setq mu4e-compose-signature-auto-include nil
-        mu4e-compose-signature (file-string "/home/matthias/.signature"))
+        mu4e-compose-signature (file-string (expand-file-name ".signature" home-dir)))
 
   ;; Sending mail.
   (setq message-send-mail-function   'smtpmail-send-it
@@ -500,11 +524,21 @@
             (lambda ()
               (dired-collapse-mode 1))))
 
+;; A template system for Emacs: http://joaotavora.github.com/yasnippet/
+;; https://github.com/joaotavora/yasnippet
 (use-package yasnippet
   :ensure t
+  :diminish yas-minor-mode
+  :init
+  (let ((personal-snippet-dir (expand-file-name "snippets" dotfiles-dir)))
+    (setq yas-snippet-dirs (list personal-snippet-dir)))
   :config
-  (yas-global-mode 1)
-  :diminish yas-minor-mode)
+  (yas-global-mode 1))
+
+;; A collection of yasnippet snippets for many languages .
+;; https://github.com/AndreaCrotti/yasnippet-snippets
+(use-package yasnippet-snippets
+  :ensure t)
 
 (use-package restclient
   :defer t
@@ -532,6 +566,8 @@
 ;; Open _external_ terminal in current directory or project.
 ;; https://github.com/davidshepherd7/terminal-here
 (use-package terminal-here
+  :ensure t
+  :pin melpa
   :bind (("C-<f5>" . terminal-here-launch)
          ("C-<f6>" . terminal-here-project-launch)))
 
@@ -568,7 +604,8 @@
   (add-hook 'cider-mode-hook #'imenu-add-menubar-index)
   ;; Rainbow delimiters.
   (add-hook 'cider-mode-hook      #'rainbow-delimiters-mode)
-  (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
+  (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
+  (setq cider-print-fn "puget"))
 
 ;; JavaScript
 ;; Deps: apt-get install nodejs
@@ -702,6 +739,8 @@
 
 ;; https://github.com/dryman/toml-mode.el
 (use-package toml-mode
+  :ensure t
+  :defer t
   :mode "\\.toml\\'")
 
 ;; Mode for editing Scala files.
@@ -783,12 +822,13 @@
 ;;   $ export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
 (use-package racer
   :ensure t
+  :pin melpa
   :after rust-mode
   :bind (:map rust-mode-map
               ("TAB" . company-indent-or-complete-common))
   :init
   (add-hook 'rust-mode-hook #'racer-mode)
-  (add-hook 'rust-mode-hook #'flycheck-mode)
+  (add-hook 'rust-mode-hook  #'flycheck-mode)
   (add-hook 'racer-mode-hook #'eldoc-mode)
   (add-hook 'racer-mode-hook #'company-mode)
   (setq company-tooltip-align-annotations t))
@@ -853,10 +893,10 @@
               (progn
                 (local-set-key (kbd "M-.") #'godef-jump)
                 (local-set-key (kbd "M-*") #'pop-tag-mark)
-                (local-set-key (kbd "M-p") 'compile)            ; Invoke compiler
-                (local-set-key (kbd "M-P") 'recompile)          ; Redo most recent compile cmd
-                (local-set-key (kbd "M-]") 'next-error)         ; Go to next error (or msg)
-                (local-set-key (kbd "M-[") 'previous-error)
+                (local-set-key (kbd "M-p") #'compile)            ; Invoke compiler
+                (local-set-key (kbd "M-P") #'recompile)          ; Redo most recent compile cmd
+                (local-set-key (kbd "M-]") #'next-error)         ; Go to next error (or msg)
+                (local-set-key (kbd "M-[") #'previous-error)
                 (go-guru-hl-identifier-mode)
                 (flycheck-mode 1)
 		(company-mode 1)
@@ -908,12 +948,21 @@
   :init
   (add-hook 'go-mode-hook #'go-eldoc-setup))
 
+;; Flycheck checker for golangci-lint
+;; https://github.com/weijiangan/flycheck-golangci-lint
+;;
+;; https://github.com/golangci/golangci-lint#editor-integration
+;; brew install golangci/tap/golangci-lint
+(use-package flycheck-golangci-lint
+  :ensure t
+  :hook (go-mode . flycheck-golangci-lint-setup))
+
 ;; https://github.com/alecthomas/gometalinter
 ;; go get -u github.com/alecthomas/gometalinter
-;; gometalinter --install 
-(use-package flycheck-gometalinter
-  :ensure t
-  :after go-mode)
+;; gometalinter --install
+;;(use-package flycheck-gometalinter
+;;  :ensure t
+;;  :after go-mode)
 
 ;; Integration of the 'gorename' tool into Emacs.
 ;; https://github.com/dominikh/go-mode.el/blob/master/go-rename.el
@@ -1125,7 +1174,13 @@
 ;; A JavaScript development environment for Emacs.
 ;; https://github.com/NicolasPetton/Indium
 ;; https://indium.readthedocs.io/en/latest/
+;; - brew install npm
+;; - npm install -g indium
 (use-package indium
+  :ensure t
+  ;:ensure-system-package
+  ;((node)
+  ; (indium . "npm install -g indium"))
   :pin melpa
   :defer t)
 
@@ -1136,15 +1191,62 @@
   :ensure t
   :bind ("C-x w" . elfeed)
   :config
-  ;; Enhance the user interface a little...
-  ;; https://github.com/algernon/elfeed-goodies
-  (use-package elfeed-goodies
-    :config
-    (elfeed-goodies/setup))
-  (use-package elfeed-org
-    :config
-    (elfeed-org)
-    (setq rmh-elfeed-org-files '("~/org/feeds.org"))))
+  (setq elfeed-feeds
+        '(("https://blog.golang.org/feed.atom" go)
+          ("https://blog.cleancoder.com/atom.xml" swe))))
+
+;; Enhance the user interface a little...
+;; https://github.com/algernon/elfeed-goodies
+(use-package elfeed-goodies
+  :ensure t
+  :defer t
+  :after elfeed
+  :init
+  (elfeed-goodies/setup))
+
+;; https://github.com/syl20bnr/spacemacs/issues/12108#issuecomment-482703160
+;; (add-hook 'elfeed-show-mode-hook
+;;           (lambda ()
+;;             (let ((inhibit-read-only t)
+;;                   (inhibit-modification-hooks t))
+;;               (setq-local truncate-lines nil)
+;;               (setq-local shr-width 85)
+;;               (set-buffer-modified-p nil))
+;;             (set-face-attribute 'variable-pitch (selected-frame) :font "")
+;;             ;(setq-local left-margin-width 15)
+;;             ;(setq-local right-margin-width 15)
+;;             ))
+
+
+;; https://github.com/skeeto/elfeed/issues/190#issuecomment-384346895
+;; (setq elfeed-show-mode-hook
+;;       (lambda ()
+;; 	(set-face-attribute 'variable-pitch (selected-frame) :font (font-spec :family "Fira Code" :size 14))
+;; 	(setq fill-column 120)
+;; 	(setq elfeed-show-entry-switch #'my-show-elfeed)))
+
+;; (defun my-show-elfeed (buffer)
+;;   (with-current-buffer buffer
+;;     (setq buffer-read-only nil)
+;;     (goto-char (point-min))
+;;     (re-search-forward "\n\n")
+;;     (fill-individual-paragraphs (point) (point-max))
+;;     (setq buffer-read-only t))
+;;   (switch-to-buffer buffer))
+
+
+
+
+;; Configure the Elfeed RSS reader with an Orgmode file.
+;; https://github.com/remyhonig/elfeed-org
+;; Disabled, seems currently broken: https://github.com/remyhonig/elfeed-org/issues/33
+(use-package elfeed-org
+  :ensure t
+  :defer t
+  :after elfeed
+  :config
+  (elfeed-org)
+  (setq rmh-elfeed-org-files '("~/org/feeds.org")))
 
 (global-set-key (kbd "C-x K") 'other-window-kill-buffer)
 
@@ -1221,7 +1323,13 @@
 ;; Protocol buffers
 (use-package protobuf-mode
   :defer t
-  :ensure t)
+  :ensure t
+  :init
+  (add-hook 'protobuf-mode-hook
+            (lambda ()
+              (progn
+                (setq c-basic-offset 4)
+                (setq indent-tabs-mode nil)))))
 
 ;; Ruby
 ;; - ruby-mode is built-in
@@ -1493,13 +1601,6 @@
   (setq persistent-scratch-autosave-interval 60)
   (persistent-scratch-setup-default))
 
-;; Preserve the scratch buffer across Emacs sessions.
-;; https://github.com/Fanael/persistent-scratch
-(use-package persistent-scratch
-  :pin melpa
-  :init
-  (persistent-scratch-setup-default))
-
 ;; Elixir
 (use-package alchemist
   :init
@@ -1547,22 +1648,6 @@
 ;; https://github.com/Fuco1/elisp-docstring-mode
 (use-package elisp-docstring-mode
   :ensure t)
-
-;; Source: https://stackoverflow.com/questions/9656311/conflict-resolution-with-emacs-ediff-how-can-i-take-the-changes-of-both-version/29757750#29757750
-(defun ediff-copy-both-to-C ()
-  (interactive)
-  (let ((a (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer))
-        (b (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer)))
-    (ediff-copy-diff ediff-current-difference nil 'C nil (concat a b))))
-
-  ;; (ediff-copy-diff ediff-current-difference nil 'C nil
-  ;;                  (concat
-  ;;                   (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
-  ;;                   (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
-; (defun add-d-to-ediff-mode-map () (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
-(add-hook 'ediff-keymap-setup-hook
-          (lambda ()
-            (define-key ediff-mode-map "d" 'ediff-copy-both-to-C)))
 
 ;; http://commercialhaskell.github.io/intero/
 ;; https://github.com/commercialhaskell/intero
@@ -1623,37 +1708,47 @@
 
 ;;(setq epg-gpg-program "gpg2"
 
-;; Keep ~/.emacs.d clean.
-;; https://github.com/emacscollective/no-littering
-(use-package no-littering
-  :ensure t
-  :after recentf
-  :config
-  (add-to-list 'recentf-exclude no-littering-var-directory)
-  (add-to-list 'recentf-exclude no-littering-etc-directory))
-
 (use-package lsp-mode
   :ensure t
+  :pin melpa
   :commands lsp)
 
 (use-package lsp-ui
   :ensure t
+  :pin melpa
   :after lsp-mode
   :commands lsp-ui-mode)
 
 (use-package company-lsp
   :ensure t
+  :pin melpa
   :after lsp-mode
   :commands company-lsp)
 
 (use-package lsp-java
   :ensure t
+  :pin melpa
   :after (lsp-mode java-mode)
   :config
   (add-hook 'java-mode-hook #'lsp))
 
+;; (use-package lsp-intellij
+;;   :ensure t
+;;   :after (lsp-mode java-mode)
+;;   :config
+;;   (add-hook 'java-mode-hook #'lsp-intellij-enable))
+
+(use-package lsp-treemacs
+  :disabled
+  :ensure t
+  :pin melpa
+  :after lsp-mode)
+
+;; Debug Adapter Protocol for Emacs
+;; https://github.com/emacs-lsp/dap-mode
 (use-package dap-mode
   :ensure t
+  :pin melpa
   :after lsp-mode
   :config
   (dap-mode 1)
@@ -1663,9 +1758,9 @@
 ;  :ensure t
 ;  :after (lsp-java))
 
-(use-package lsp-java-treemacs
-  :disabled
-  :after (treemacs))
+;; (use-package lsp-java-treemacs
+;;   :disabled
+;;   :after (treemacs))
 
 ;; https://github.com/Alexander-Miller/treemacs
 (use-package treemacs
@@ -1710,7 +1805,7 @@
 	 ;; Jump to next/previous hunk
 	 ("C-x p" . git-gutter:previous-hunk)
 	 ("C-x n" . git-gutter:next-hunk))
-  :config
+  :init
   (global-git-gutter-mode +1))
 
 ;; https://github.com/Alexander-Miller/company-shell
@@ -1732,8 +1827,158 @@
 ;; https://github.com/abo-abo/avy
 (use-package avy
   :ensure t
+  :pin melpa
   :bind (("C-:"   . avy-goto-char)
          ("C-'"   . avy-goto-char-2)
          ("M-g f" . avy-goto-line)
          ("M-g w" . avy-goto-word-1)
          ("M-g e" . avy-goto-word-0)))
+
+;; Fast, friendly searching with ripgrep and Emacs.
+;; https://github.com/Wilfred/deadgrep
+(use-package deadgrep
+  :ensure t
+  :pin melpa
+  :defer t
+  :bind ("<f5>" . deadgrep))
+
+;(require 'dap-go)
+
+;; Emacs bookmark support for org-mode.
+;; https://github.com/alphapapa/org-bookmark-heading
+(use-package org-bookmark-heading
+  :ensure t
+  :pin melpa)
+
+;; Quickly follow links in Emacs (press 'o').
+;; https://github.com/abo-abo/ace-link
+(use-package ace-link
+  :ensure t
+  :pin melpa
+  :init
+  (ace-link-setup-default))
+
+;; Major mode for editing mutt configuration files.
+;; https://gitlab.com/flexw/mutt-mode
+(use-package mutt-mode
+  :ensure t
+  :mode (("muttrc"  . mutt-mode)
+         (".muttrc" . mutt-mode)))
+
+;; A better Emacs *help* buffer.
+;; https://github.com/Wilfred/helpful
+(use-package helpful
+  :ensure t
+  :pin melpa
+  :bind (("C-h f"   . helpful-callable)
+         ("C-h v"   . helpful-variable)
+         ("C-h k"   . helpful-key)
+         ("C-c C-d" . helpful-at-point)
+         ("C-h F"   . helpful-function)
+         ("C-h C"   . helpful-command)))
+
+;; Kotlin major mode for Emacs.
+;; https://github.com/Emacs-Kotlin-Mode-Maintainers/kotlin-mode
+(use-package kotlin-mode
+  :ensure t
+  :defer t)
+
+;; Flycheck checker for Kotlin files.
+;; https://github.com/whirm/flycheck-kotlin
+(use-package flycheck-kotlin
+  :ensure t
+  :after flycheck
+  :init
+  (flycheck-kotlin-setup))
+
+;; (lsp-register-client
+;;  (make-lsp-client :new-connection (lsp-stdio-connection '("/Users/matthias.nuessler/projects/foss/KotlinLanguageServer/server/build/distributions/server-0.1.13/bin/kotlin-language-server"))
+;;                   :major-modes '(kotlin-mode)
+;;                   :priority -1
+;;                   :server-id 'kotlin-ls))
+
+;; Major mode of Terraform configuration files.
+;; https://github.com/syohex/emacs-terraform-mode
+(use-package terraform-mode
+  :ensure t
+  :defer t
+  :pin melpa
+  :init
+  (custom-set-variables '(terraform-indent-level 2)))
+
+;; Company backend for terraform files.
+;; https://github.com/rafalcieslak/emacs-company-terraform
+(use-package company-terraform
+  :ensure t
+  :defer t
+  :pin melpa
+  :after (company-mode terraform-mode)
+  :init
+  (company-terraform-init)
+  (add-hook 'terraform-mode-hook #'company-mode))
+
+;; Documentation popup for company-mode.
+;; https://github.com/expez/company-quickhelp
+(use-package company-quickhelp
+  :ensure t
+  :after (company-mode)
+  :init
+  (add-hook company-mode-hook
+            (lambda ()
+              (company-quickhelp-mode 1)))
+  (eval-after-load 'company
+    '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin)))
+
+;; Disabling external pin entry for GPG (in Emacs only)
+;; https://www.masteringemacs.org/article/keeping-secrets-in-emacs-gnupg-auth-sources
+(setenv "GPG_AGENT_INFO" nil)
+
+;; Emacs as external editor for mutt
+(add-to-list 'auto-mode-alist '("/mutt-\\|itsalltext.*mail\\.google" . mail-mode))
+(add-hook 'mail-mode-hook 'turn-on-auto-fill)
+;; Use C-c C-c to save email and close buffer.
+(add-hook 'mail-mode-hook
+	  (lambda ()
+	    (define-key [mail-mode-map (control c) (control) c]
+	      (lambda ()
+		(interactive)
+		(save-buffer)
+		(server-edit)))))
+
+;; Short and sweet LISP editing http://oremacs.com/lispy/
+;; https://github.com/abo-abo/lispy/
+(use-package lispy
+  :ensure t)
+
+;; Emacs mode for editing Cucumber plain text stories.
+;; https://github.com/michaelklishin/cucumber.el
+(use-package feature-mode
+  :ensure t
+  :defer t
+  :pin melpa
+  :mode ("\.feature$"))
+
+;; Manage org-mode TODOs for your projectile projects 
+;; https://github.com/IvanMalison/org-projectile
+(use-package org-projectile
+  :ensure t
+  :bind (("C-c n p" . org-projectile-project-todo-completing-read)
+         ("C-c c" . org-capture))
+  :config
+  (progn
+    (setq org-projectile-projects-file
+          "~/org/project-todos.org")
+    (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
+    (push (org-projectile-project-todo-entry) org-capture-templates)))
+
+;; Emacs minor mode for making Anki cards with Org.
+;; https://github.com/louietan/anki-editor
+(use-package anki-editor
+  :ensure t
+  :defer t
+  :pin melpa)
+
+(use-package minions
+  :ensure t
+  :config
+  (minions-mode 1))

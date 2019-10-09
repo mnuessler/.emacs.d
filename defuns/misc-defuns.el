@@ -141,3 +141,31 @@
          (time-unix (seconds-to-time (read-number "Unix epoch time stamp: ")))
          (time-str (format-time-string "<%Y-%m-%d %a %H:%M:%S>" time-unix time-zone)))
     (message "Date: %s (%s)" time-str time-zone)))
+
+
+;; Source: https://stackoverflow.com/questions/9656311/conflict-resolution-with-emacs-ediff-how-can-i-take-the-changes-of-both-version/29757750#29757750
+(defun ediff-copy-both-to-C ()
+  (interactive)
+  (ediff-copy-diff ediff-current-difference nil 'C nil
+                   (concat
+                    (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
+                    (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
+(add-hook 'ediff-keymap-setup-hook
+          (lambda ()
+            (define-key ediff-mode-map "B" #'ediff-copy-both-to-C)))
+
+;; https://gist.github.com/nriley/1283061
+(defun toggle-frame-fullscreen (&optional frame)
+  (interactive)
+  (set-frame-parameter frame 'fullscreen
+                       (if (null (frame-parameter frame 'fullscreen))
+                           'fullboth nil)))
+; ediff-toggle-wide-display tries to use the entire display width,
+; which breaks with multiple monitors
+(defun ediff-fullscreen-as-wide-display ()
+  (interactive)
+  (if (eq window-system 'mac)
+      (defadvice ediff-toggle-wide-display
+        (around ediff-toggle-frame-fullscreen activate)
+        (toggle-frame-fullscreen (window-frame ediff-window-A))
+        (raise-frame ediff-control-frame))))
