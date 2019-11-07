@@ -16,12 +16,13 @@
 
 ;; Define 'workflow'
 (setq org-todo-keywords
-      '((sequence "TODO" "STARTED" "WAITING" "|" "DONE" "CANCELED")))
+      '((sequence "TODO(t)" "IN-PROGRESS(p)" "WAITING(w@/!)" "|" "DONE(d!)")
+        (sequence "|" "CANCELED(c@)")))
 (setq org-todo-keyword-faces
-      '(("TODO"     . org-warning)
-        ("STARTED"  . "yellow")
-        ("WAITING"  . "blue")
-        ("CANCELED" . (:foreground "blue" :weight bold))))
+      '(("TODO"         . org-warning)
+        ("IN-PROGRESS"  . "yellow")
+        ("WAITING"      . "blue")
+        ("CANCELED"     . (:foreground "blue" :weight bold))))
 
 ;; Persist clock time between sessions
 (setq org-clock-persist 'history)
@@ -37,10 +38,11 @@
 (setq org-mobile-inbox-for-pull "~/Dropbox/org/inbox.org")
 ;; Set to <your Dropbox root directory>/MobileOrg.
 (setq org-mobile-directory "~/Dropbox/MobileOrg")
-(setq org-agenda-files
-      '("~/Dropbox/org/private.org"
+;;(setq org-agenda-files '("~/Dropbox/org/"))
+(setq org-agenda-files '("~/Dropbox/org/private.org"
         "~/Dropbox/org/dev.org"
-        "~/Dropbox/org/quotations.org"))
+        "~/Dropbox/org/quotations.org"
+        "~/Dropbox/org/todo.org"))
 
 ;; Settings for code blocks
 ;; Enable syntax highlighting
@@ -77,5 +79,68 @@
    ;; https://github.com/pope/ob-go
    ;;(go . t)
  ))
+
+(global-set-key (kbd "C-c c") 'org-capture)
+
+;; Templates 'p' and 'L' are for use of
+;; https://github.com/sprig/org-capture-extension
+;; (Extension requires `brew install emacs-client')
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "inbox.org" "Tasks")
+         "* TODO %?\n  %i\n  %a")
+        ("p" "Protocol" entry (file+headline "inbox.org" "Inbox")
+         "* %^{Title}\nSource: %u, %c\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+	("L" "Protocol Link" entry (file+headline "inbox.org" "Inbox")
+         "* %? [[%:link][%:description]] \nCaptured On: %U")))
+
+;; Agenda view as suggested by:
+;; https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
+(defun air-org-skip-subtree-if-priority (priority)
+  "Skip an agenda subtree if it has a priority of PRIORITY.
+
+PRIORITY may be one of the characters ?A, ?B, or ?C."
+  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+        (pri-value (* 1000 (- org-lowest-priority priority)))
+        (pri-current (org-get-priority (thing-at-point 'line t))))
+    (if (= pri-value pri-current)
+        subtree-end
+      nil)))
+
+(defun air-org-skip-subtree-if-habit ()
+  "Skip an agenda entry if it has a STYLE property equal to \"habit\"."
+  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+    (if (string= (org-entry-get nil "STYLE") "habit")
+        subtree-end
+      nil)))
+
+(setq org-agenda-custom-commands
+      '(("d" "Daily agenda and all TODOs"
+         ((tags "PRIORITY=\"A\""
+                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                 (org-agenda-overriding-header "High-priority unfinished tasks:")))
+          (agenda "" ((org-agenda-ndays 1)))
+          (alltodo ""
+                   ((org-agenda-skip-function '(or (air-org-skip-subtree-if-habit)
+                                                   (air-org-skip-subtree-if-priority ?A)
+                                                   (org-agenda-skip-if nil '(scheduled deadline))))
+                    (org-agenda-overriding-header "ALL normal priority tasks:"))))
+         ((org-agenda-compact-blocks t)))
+        ("o" "At the office" tags-todo "@office"
+         ;; https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
+         ((org-agenda-overriding-header "Office")))
+        ("h" "At home" tags-todo "@home"
+         ;; https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
+         ((org-agenda-overriding-header "Home")))
+        ("D" "Upcoming deadlines" agenda ""
+                ((org-agenda-time-grid nil)
+                 (org-deadline-warning-days 365)
+                 (org-agenda-entry-types '(:deadline))))
+        ("p" . "Priorities")
+        ("pa" "A items" tags-todo "+PRIORITY=\"A\"")
+        ("pb" "B items" tags-todo "+PRIORITY=\"B\"")
+        ("pc" "C items" tags-todo "+PRIORITY=\"C\"")))
+
+;; Show next 7 days in agenda instead of current week.
+(setq org-agenda-start-on-weekday nil)
 
 (provide 'setup-org-mode)

@@ -8,38 +8,13 @@
  '(bmkp-last-as-first-bookmark-file "~/.emacs.d/bookmarks")
  '(browse-url-browser-function (quote browse-url-choose-browser))
  '(confirm-kill-emacs (quote y-or-n-p))
- '(counsel-projectile-switch-project-action
-   (quote
-    (4
-     ("o" counsel-projectile-switch-project-action "jump to a project buffer or file")
-     ("f" counsel-projectile-switch-project-action-find-file "jump to a project file")
-     ("d" counsel-projectile-switch-project-action-find-dir "jump to a project directory")
-     ("D" counsel-projectile-switch-project-action-dired "open project in dired")
-     ("b" counsel-projectile-switch-project-action-switch-to-buffer "jump to a project buffer")
-     ("m" counsel-projectile-switch-project-action-find-file-manually "find file manually from project root")
-     ("S" counsel-projectile-switch-project-action-save-all-buffers "save all project buffers")
-     ("k" counsel-projectile-switch-project-action-kill-buffers "kill all project buffers")
-     ("K" counsel-projectile-switch-project-action-remove-known-project "remove project from known projects")
-     ("c" counsel-projectile-switch-project-action-compile "run project compilation command")
-     ("C" counsel-projectile-switch-project-action-configure "run project configure command")
-     ("E" counsel-projectile-switch-project-action-edit-dir-locals "edit project dir-locals")
-     ("v" counsel-projectile-switch-project-action-vc "open project in vc-dir / magit / monky")
-     ("sg" counsel-projectile-switch-project-action-grep "search project with grep")
-     ("si" counsel-projectile-switch-project-action-git-grep "search project with git grep")
-     ("ss" counsel-projectile-switch-project-action-ag "search project with ag")
-     ("sr" counsel-projectile-switch-project-action-rg "search project with rg")
-     ("xs" counsel-projectile-switch-project-action-run-shell "invoke shell from project root")
-     ("xe" counsel-projectile-switch-project-action-run-eshell "invoke eshell from project root")
-     ("xt" counsel-projectile-switch-project-action-run-term "invoke term from project root")
-     ("Oc" counsel-projectile-switch-project-action-org-capture "capture into project")
-     ("Oa" counsel-projectile-switch-project-action-org-agenda "open project agenda"))))
  '(csv-align-style (quote auto))
  '(csv-separators (quote ("," ";" "|")))
  '(custom-safe-themes
    (quote
     ("f5512c02e0a6887e987a816918b7a684d558716262ac7ee2dd0437ab913eaec6" default)))
  '(ediff-show-ancestor nil)
- '(ediff-split-window-function (quote split-window-horizontally))
+ '(ediff-split-window-function (quote split-window-horizontally) t)
  '(ediff-window-setup-function (quote ediff-setup-windows-plain))
  '(elfeed-goodies/entry-pane-position (quote bottom))
  '(elpy-rpc-python-command "python3")
@@ -51,17 +26,226 @@
     (go-dep-gopath go-gb-gopath go-godep-gopath go-wgo-gopath go-plain-gopath)))
  '(gofmt-command "gofmt")
  '(kubernetes-kubectl-executable "/home/matthias/google-cloud-sdk/bin/kubectl")
+ '(ledger-reports
+   (quote
+    (("Expenses food this month" "ledger -f /Users/matthiasnuessler/Documents/ledger/my2.ledger --effective --sort date --period \"this month\" reg \"Expenses:Food\" --real --price EUR")
+     (#("BVG monthly expenses" 0 1
+        (idx 1))
+      "ledger -f /Users/matthiasnuessler/Documents/ledger/my2.ledger --effective --sort date --monthly reg \"Public Transport\" and @BVG --real")
+     (#("Work Lunch Monthly" 0 1
+        (idx 2))
+      "ledger -f /Users/matthiasnuessler/Documents/ledger/my2.ledger --effective --sort date --monthly reg Expenses:Food:Work")
+     (#("bal" 0 1
+        (idx 3))
+      "%(binary) -f %(ledger-file) bal")
+     (#("reg" 0 1
+        (idx 4))
+      "%(binary) -f %(ledger-file) --effective --sort date reg")
+     (#("payee" 0 1
+        (idx 5))
+      "%(binary) -f %(ledger-file) reg @%(payee)")
+     (#("account" 0 1
+        (idx 6))
+      "%(binary) -f %(ledger-file) --effective --sort date reg %(account)"))))
+ '(ledger-schedule-file "~/Documents/ledger/ledger-schedule.ledger")
+ '(ledger-schedule-look-forward 90)
  '(lsp-clients-go-server "gopls")
  '(lsp-ui-doc-delay 0.8)
  '(lsp-ui-doc-max-width 75)
  '(lsp-ui-sideline-ignore-duplicate t)
  '(neo-smart-open t)
  '(nxml-slash-auto-complete-flag t)
+ '(org-agenda-files
+   (quote
+    ("~/Dropbox/org/private.org" "~/Dropbox/org/dev.org" "~/Dropbox/org/quotations.org" "~/Dropbox/org/todo.org")))
+ '(org-modules
+   (quote
+    (org-bbdb org-bibtex org-docview org-eww org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (minions anki-editor coffee-mode org-projectile feature-mode yasnippet-snippets lispy lsp-java company-lsp lsp-ui racer flycheck-gometalinter flycheck-golangci-lint company-quickhelp company-terraform terraform-mode flycheck-kotlin kotlin-mode helpful mutt-mode ace-link org-bookmark-heading dap-mode dap-go deadgrep kubernetes bash-completion google-translate company-sourcekit drag-stuff eshell-bookmark elisp-docstring-mode string-edit flycheck-yamllint el-get autodisass-java-bytecode dired-collapse persistent-scratch git-timemachine editorconfig projectile company-shell org-present dimmer git-gutter alchemist elixir-mode smartparens-mode treemacs-magit treemacs lsp-java-treemacs dap-java go-autocomplete no-littering company-go go-company ob-elixir ob-swift powerline magit java-mode docker-compose-mode ob-http ob-ipython ob-mongo ac-octave ob-go ob-prolog ob-redis ob-rust ob-sql-mode ssh-tunnels edbi dash-at-point realgud counsel-dash zeal-at-point go-rename indent-tools flymake-shell elfeed-org yapfify go-eldoc robe rvm flymake-ruby inf-ruby rubocop protobuf-mode 2048-game lua-mode auctex highlight-indentation-mode shm meghanada speed-type org elfeed-goodies elfeed edit-server indium magit-tramp magithub highlight-symbol gitattributes-mode gitignore-mode elpy flycheck-mypy jedi magit-gh-pulls ibuffer-projectile groovy-mode counsel-projectile esup ereader jira-markup-mode command-log-mode buffer-move goto-last-change magit-gerrit dired-imenu idomenu go-guru ag go-mode company-ansible company-restclient clojure-cheatsheet rainbow-delimiters smartparens zenburn-theme flycheck-ledger ledger-mode swift-mode cargo rust-mode gist persp-mode persp-mode-projectile-bridge prolog scala-mode toml-mode hackernews haskell-mode hacker-typer crontab-mode ssh-config-mode apache-mode nginx-mode xkcd csv-mode which-key ac-php markdown-mode plantuml-mode php-mode web-mode zencoding-mode js2-mode company cider terminal-here highlight-indentation yaml-mode ob-restclient yasnippet dired+ ansible window-numbering bookmark+ back-button gitconfig-mode browse-kill-ring smooth-scrolling mu4e-maildirs-extension ace-flyspell guess-language slack nyan-mode all-the-icons all-the-icons-dired diminish exec-path-from-shell ace-jump-mode ace-mc docker docker-tramp dockerfile-mode emacs-xkcd embrace neotree anti-zenburn-theme expand-region shell-pop undo-tree multiple-cursors ansible-doc ansible-vault smart-mode-line smart-mode-line-powerline-theme use-package)))
+    (2048-game
+     ac-octave
+     ac-php
+     ace-flyspell
+     ace-jump-mode
+     ace-mc
+     achievements
+     ag
+     alchemist
+     all-the-icons
+     all-the-icons-dired
+     all-the-icons-ivy
+     ansible
+     ansible-doc
+     ansible-vault
+     apache-mode
+     auctex
+     autodisass-java-bytecode
+     back-button
+     bookmark+
+     browse-kill-ring
+     buffer-move
+     cargo
+     cider
+     clj-refactoring
+     clojure-cheatsheet
+     command-log-mode
+     company
+     company-ansible
+     company-restclient
+     company-sourcekit
+     counsel-dash
+     counsel-projectile
+     crontab-mode
+     csv-mode
+     dash-at-point
+     diminish
+     dimmer
+     dired+
+     dired-collapse
+     dired-imenu
+     docker
+     docker-compose-mode
+     docker-tramp
+     dockerfile-mode
+     edbi
+     edit-server
+     editorconfig
+     eldoc-overlay
+     elfeed
+     elfeed-goodies
+     elfeed-org
+     elisp-docstring-mode
+     elpy
+     emacs-xkcd
+     embrace
+     ensime
+     ereader
+     esup
+     exec-path-from-shell
+     expand-region
+     flycheck-golangci-lint
+     flycheck-gometalinter
+     flycheck-ledger
+     flycheck-mypy
+     flymake-go
+     flymake-ruby
+     flymake-shell
+     ggtags
+     gist
+     git-gutter
+     git-timemachine
+     gitattributes-mode
+     gitconfig-mode
+     gitignore-mode
+     go-autocomplete
+     go-eldoc
+     go-guru
+     go-mode
+     go-rename
+     goto-last-change
+     groovy-mode
+     guess-language
+     hacker-typer
+     hackernews
+     haskell-mode
+     highlight-indentation
+     highlight-indentation-mode
+     highlight-symbol
+     htmlize
+     ibuffer-projectile
+     idomenu
+     indent-tools
+     indium
+     inf-ruby
+     intero
+     jedi
+     jira-markup-mode
+     js2-mode
+     kubernetes
+     ledger-mode
+     lsp-go
+     lua-mode
+     magit-gerrit
+     magit-gh-pulls
+     magit-tramp
+     magithub
+     markdown-mode
+     meghanada
+     minions
+     mu4e-maildirs-extension
+     multiple-cursors
+     neotree
+     nginx-mode
+     no-littering
+     nyan-mode
+     ob-elixir
+     ob-go
+     ob-http
+     ob-ipython
+     ob-mongo
+     ob-php
+     ob-prolog
+     ob-redis
+     ob-restclient
+     ob-rust
+     ob-sql-mode
+     org
+     org-present
+     org-presie
+     org-projectile
+     ox-reveal
+     persp-mode
+     persp-mode-projectile-bridge
+     php-mode
+     plantuml-mode
+     popup-imenu
+     projectile
+     projectile-ripgrep
+     prolog
+     protobuf-mode
+     racer
+     rainbow-delimiters
+     realgud
+     restclient
+     robe
+     rubocop
+     rust-mode
+     rvm
+     scala-mode
+     shell-pop
+     shm
+     slack
+     smart-mode-line
+     smart-mode-line-powerline-theme
+     smartparens
+     smooth-scrolling
+     speed-type
+     ssh-config-mode
+     ssh-tunnels
+     string-edit
+     swift-mode
+     swiper
+     terminal-here
+     toml-mode
+     undo-tree
+     unfill
+     use-package
+     web-mode
+     web-mode-edit-element
+     which-key
+     window-numbering
+     x509-mode
+     xkcd
+     yaml-mode
+     yapfify
+     yasnippet
+     yasnippet-snippets
+     zeal-at-point
+     zenburn-theme
+     zencoding-mode)))
  '(racer-rust-src-path
-   "~/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src")
+   "~/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/src/rust/src")
  '(safe-local-variable-values
    (quote
     ((test-commaned . "./build.py './gradlew build -x dockerApacheProxyBuild -x dockerPostfixBuild'"))))

@@ -230,3 +230,124 @@ See also: `my/escape-quotes'"
   (interactive)
   (enlarge-window (/ (window-height (next-window)) 2)))
 
+;; Move line
+;; Source: https://www.emacswiki.org/emacs/MoveLine
+(defmacro save-column (&rest body)
+  `(let ((column (current-column)))
+     (unwind-protect
+         (progn ,@body)
+       (move-to-column column))))
+
+(defun move-line-up ()
+  (interactive)
+  (save-column
+    (transpose-lines 1)
+    (forward-line -2)))
+
+(defun move-line-down ()
+  (interactive)
+  (save-column
+    (forward-line 1)
+    (transpose-lines 1)
+    (forward-line -1)))
+
+;; Duplicate line
+(defun duplicate-line()
+  (interactive)
+  (save-column
+   (move-beginning-of-line 1)
+   (kill-line)
+   (yank)
+   (open-line 1)
+   (next-line 1)
+   (yank)))
+
+;; Switch focus to minibuffer window.
+;; Source: https://superuser.com/questions/132225/how-to-get-back-to-an-active-minibuffer-prompt-in-emacs-without-the-mouse
+(defun switch-to-minibuffer-window ()
+  "switch to minibuffer window (if active)"
+  (interactive)
+  (when (active-minibuffer-window)
+    (select-frame-set-input-focus (window-frame (active-minibuffer-window)))
+    (select-window (active-minibuffer-window))))
+(global-set-key (kbd "<f7>") 'switch-to-minibuffer-window)
+
+;; https://emacs.stackexchange.com/questions/41222/how-can-i-pass-the-no-line-break-argument-to-base64-encode-region-in-m-x
+(defun my/base64-encode-region-no-break ()
+  (interactive)
+  (base64-encode-region (mark) (point) t))
+
+(defun base64-encode-region-prefix-arg (&rest _args)
+  "Pass prefix arg as third arg to `base64-encode-region'."
+  (interactive "r\nP"))
+(advice-add 'base64-encode-region :before #'base64-encode-region-prefix-arg)
+
+;; Source: http://ergoemacs.org/emacs/elisp_escape_quotes.html
+(defun my/escape-quotes (@begin @end)
+  "Replace 「\"」 by 「\\\"」 in current line or text selection.
+See also: `my/unescape-quotes'"
+  (interactive
+   (if (use-region-p)
+       (list (region-beginning) (region-end))
+     (list (line-beginning-position) (line-end-position))))
+  (save-excursion
+    (save-restriction
+      (narrow-to-region @begin @end)
+      (goto-char (point-min))
+      (while (search-forward "\"" nil t)
+        (replace-match "\\\"" "FIXEDCASE" "LITERAL")))))
+
+(defun my/unescape-quotes (@begin @end)
+  "Replace  「\\\"」 by 「\"」 in current line or text selection.
+See also: `my/escape-quotes'"
+  (interactive
+   (if (use-region-p)
+       (list (region-beginning) (region-end))
+     (list (line-beginning-position) (line-end-position))))
+  (save-excursion
+    (save-restriction
+      (narrow-to-region @begin @end)
+      (goto-char (point-min))
+      (while (search-forward "\\\"" nil t)
+        (replace-match "\"" "FIXEDCASE" "LITERAL")))))
+
+(defun my-kill-whole-line (&optional arg)
+  "Kill the current line but preserve the column position."
+  (interactive "p")
+  (save-column
+   (kill-whole-line arg)))
+
+;; Source: https://stackoverflow.com/questions/4987760/how-to-change-size-of-split-screen-emacs-windows/4988206
+(defun halve-other-window-height ()
+  "Expand current window to use half of the other window's lines."
+  (interactive)
+  (enlarge-window (/ (window-height (next-window)) 2)))
+
+;; https://www.emacswiki.org/emacs/WholeLineOrRegion
+(defun my-kill-ring-save (beg end flash)
+  (interactive (if (use-region-p)
+                   (list (region-beginning) (region-end) nil)
+                 (list (line-beginning-position)
+                       (line-beginning-position 2) 'flash)))
+  (kill-ring-save beg end)
+  (when flash
+    (save-excursion
+      (if (equal (current-column) 0)
+          (goto-char end)
+        (goto-char beg))
+      (sit-for blink-matching-delay))))
+(global-set-key [remap kill-ring-save] 'my-kill-ring-save)
+
+(defun my-kill-region (beg end flash)
+  (interactive (if (use-region-p)
+                   (list (region-beginning) (region-end) nil)
+                 (list (line-beginning-position)
+                       (line-beginning-position 2) 'flash)))
+  (kill-region beg end)
+  (when flash
+    (save-excursion
+      (if (equal (current-column) 0)
+          (goto-char end)
+        (goto-char beg))
+      (sit-for blink-matching-delay))))
+(global-set-key [remap kill-region] 'my-kill-region)
