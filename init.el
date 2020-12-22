@@ -27,6 +27,12 @@
 ;              (package-install package)))
 ;          package-selected-packages)))
 
+;; Start the week on Monday
+(setq calendar-week-start-day 1)
+
+(setq initial-major-mode 'fundamental-mode)
+(setq initial-scratch-message nil)
+
 ;; Determine path to ".emacs.d" directory.
 (setq dotfiles-dir (file-name-directory
                     (or (buffer-file-name) load-file-name)))
@@ -57,9 +63,6 @@
 
 ;; Newline at end of file
 (setq require-final-newline t)
-
-;; Week starts on Monday
-(setq calendar-week-start-day 1)
 
 ;; Revert buffers automatically when underlying files are changed
 ;; externally
@@ -104,12 +107,14 @@
   ;; Make M-y to use browse-kill-ring.
   (browse-kill-ring-default-keybindings))
 
+;; Treat undo history as a tree.
+;; (Pin to ELPA because there is an old version on Marmalade!)
 (use-package undo-tree
   :ensure t
-  :pin melpa
+  :pin elpa
+  :diminish undo-tree-mode
   :config
-  (global-undo-tree-mode)
-  :diminish undo-tree-mode)
+  (global-undo-tree-mode))
 
 (use-package bookmark+
   :disabled)
@@ -160,7 +165,13 @@
               ("C-p" . company-select-previous)
               :map company-active-map
               ("C-n" . company-select-next)
-              ("C-p" . company-select-previous)))
+              ("C-p" . company-select-previous))
+  :diminish company-mode
+  :hook (prog-mode . company-mode)
+  :config
+  (setq company-tooltip-align-annotations t)
+  (setq company-minimum-prefix-length 1)
+  (setq company-show-numbers t))
 
 ;; Modes for various git configuration files.
 ;; https://github.com/magit/git-modes
@@ -193,13 +204,12 @@
   (magithub-feature-autoinject t)
   (setq magithub-clone-default-directory "~/projects"))
 
-;; A Kubernetes porcelain inside Emacs.
-;; https://github.com/chrisbarrett/kubernetes-el
+;; Emacs porcelain for Kubernetes
+;; https://github.com/chrisbarrett/kubernetes-el/commits/master
 (use-package kubernetes
   :ensure t
   :pin melpa
-  :commands (kubernetes-overview)
-  :bind ("C-x p" . kubernetes-overview))
+  :commands (kubernetes-overview))
 
 (use-package ace-jump-mode
   :ensure t
@@ -318,7 +328,7 @@
 ;; Cheat sheet:
 ;; http://www.djcbsoftware.nl/code/mu/mu4e/Keybindings.html#Keybindings
 (use-package mu4e
-  :load-path "/usr/local/Cellar/mu/1.0/share/emacs/site-lisp/mu/mu4e/"
+  :load-path "/usr/local/Cellar/mu/1.4.13/share/emacs/site-lisp/mu/mu4e"
   :bind ("C-x M" . mu4e)
   :init
   ;; folders
@@ -382,7 +392,7 @@
 
   ;; something about ourselves
   (setq user-full-name    "Matthias Nüßler"
-        user-mail-address (concat "m.nuessler@" smtpmail-local-domain))
+        user-mail-address (concat "matthias.nuessler@" smtpmail-local-domain))
   :config
   (add-hook 'mu4e-compose-mode-hook
             (defun my-do-compose-stuff ()
@@ -532,7 +542,7 @@
 ;; (Disabled because it messes up the color scheme.)
 (use-package dired+
   :disabled
-  :after dired
+  :init
   (diredp-toggle-find-file-reuse-dir 1))
 
 ;; https://github.com/Fuco1/dired-hacks#dired-collapse
@@ -567,9 +577,11 @@
 ;; Major mode for PlantUML diagram definitions.
 ;; http://plantuml.com/
 (use-package plantuml-mode
-  :mode ("\\.plu\\'" "\\.plantuml\\'")
-  :bind (:map plantuml-mode-keymap
-              ("C-<f8>" . plantuml-complete-symbol)))
+  :ensure t
+  :pin melpa
+  :mode ("\\.puml\\'" "\\.plantuml\\'"))
+  ;;:bind (:map plantuml-mode-keymap
+  ;;            ("C-<f8>" . plantuml-complete-symbol)))
 
 ;; TODO mode mappings
 (require 'setup-org-mode)
@@ -631,22 +643,14 @@
   ;; Rainbow delimiters.
   (add-hook 'cider-mode-hook      #'rainbow-delimiters-mode)
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
+  ;;(add-hook 'cider-mode-hook #'cider-hydra-mode)
   (setq cider-print-fn "puget"))
 
-;; (use-package clj-refactoring
-;;   :init
-;;   (add-hook 'clojure-mode-hook
-;;             (lambda ()
-;;               (progn
-;;                 (clj-refactor-mode 1)
-;;                 ;; This choice of keybinding leaves cider-macroexpand-1 unbound
-;;                 (cljr-add-keybindings-with-prefix "C-c C-m")))))
-
-(use-package clojure-cheatsheet
-  :ensure t
+;; Hydras for CIDER
+;; https://github.com/clojure-emacs/cider-hydra
+(use-package cider-hydra
   :disabled
-  :init
-  (define-key clojure-mode-map (kbd "C-c C-h") #'clojure-cheatsheet))
+  :ensure t)
 
 ;; JavaScript
 ;; Deps: apt-get install nodejs
@@ -655,11 +659,14 @@
   :mode "\\.js\\'"
   :interpreter "nodejs")
 
+;; A neat way to write markup quickly in emacs.
+;; https://github.com/rooney/zencoding
 (use-package zencoding-mode
   :ensure t
-  :config
+  :init
   ;; Auto-start on any markup modes.
-  (add-hook 'sgml-mode-hook 'zencoding-mode))
+  (add-hook 'sgml-mode-hook #'zencoding-mode)
+  (add-hook 'web-mode-hook  #'zencoding-mode))
 
 ;; ac-php
 ;; https://github.com/xcwen/ac-php#install
@@ -700,6 +707,7 @@
 ;; To use multimarkdown: apt-get install libtext-markup-perl perl-doc
 (use-package markdown-mode
   :ensure t
+  :pin melpa
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'"       . markdown-mode)
@@ -726,6 +734,7 @@
   :diminish which-key-mode)
 
 (use-package csv-mode
+  :ensure t
   :mode "\\.[Cc][Ss][Vv]\\'")
 
 ;; View xkcd from Emacs, yay!
@@ -792,7 +801,21 @@
 ;; Mode for editing Scala files.
 ;; https://github.com/ensime/emacs-scala-mode
 (use-package scala-mode
-  :defer t)
+  :ensure t
+  :defer t
+  :mode "\\.\\(scala\\|sbt\\)$")
+
+(use-package sbt-mode
+  :ensure t
+  :defer t
+  :commands (sbt-start sbt-command)
+  :config
+  ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
+  ;; allows using SPACE when in the minibuffer
+  (substitute-key-definition
+   'minibuffer-complete-word
+   'self-insert-command
+   minibuffer-local-completion-map))
 
 ;; Prolog
 (use-package prolog-mode
@@ -857,8 +880,7 @@
 (use-package cargo
   :ensure t
   :after rust-mode
-  :config
-  (add-hook 'rust-mode-hook #'cargo-minor-mode))
+  :hook (rust-mode . cargo-minor-mode))
 
 ;; https://github.com/racer-rust/racer
 ;; Installation:
@@ -878,6 +900,11 @@
   (add-hook 'racer-mode-hook #'eldoc-mode)
   (add-hook 'racer-mode-hook #'company-mode)
   (setq company-tooltip-align-annotations t))
+
+(use-package flycheck-rust
+  :ensure t
+  :config
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 ;; Swift.
 ;; https://github.com/swift-emacs/swift-mode
@@ -927,6 +954,9 @@
 
 ;; Golang
 ;; https://github.com/dominikh/go-mode.el
+;;
+;; For gopls language server see:
+;; https://github.com/golang/tools/blob/master/gopls/doc/user.md#installation
 (use-package go-mode
   :ensure t
   :after lsp-mode
@@ -934,41 +964,21 @@
   :bind ("M-*" . pop-tag-mark)
   :init
   (add-hook 'before-save-hook #'gofmt-before-save)
-  (setq gofmt-command "goimports")
+  ;(setq gofmt-command "goimports")
   (add-hook 'go-mode-hook
             (lambda ()
               (progn
-                (local-set-key (kbd "M-.") #'godef-jump)
-                (local-set-key (kbd "M-*") #'pop-tag-mark)
-                (local-set-key (kbd "M-p") #'compile)            ; Invoke compiler
-                (local-set-key (kbd "M-P") #'recompile)          ; Redo most recent compile cmd
-                (local-set-key (kbd "M-]") #'next-error)         ; Go to next error (or msg)
-                (local-set-key (kbd "M-[") #'previous-error)
+                ;;(local-set-key (kbd "M-.") #'godef-jump)
+                ;;(local-set-key (kbd "M-*") #'pop-tag-mark)
+                ;;(local-set-key (kbd "M-p") #'compile)            ; Invoke compiler
+                ;;(local-set-key (kbd "M-P") #'recompile)          ; Redo most recent compile cmd
+                ;;(local-set-key (kbd "M-]") #'next-error)         ; Go to next error (or msg)
+                ;;(local-set-key (kbd "M-[") #'previous-error)
+                (setq fill-column 120)
                 (go-guru-hl-identifier-mode)
-                (flycheck-mode 1)
-		(company-mode 1)
-		(lsp)
                 (if (not (string-match "go" compile-command))
                     (set (make-local-variable 'compile-command)
                          "go build -v && go test -v && go vet"))))))
-
-;; Dependencies:
-;; go get -u github.com/mdempsky/gocode
-;; (not maintained anymore: github.com/nsf/gocode)
-(use-package go-autocomplete
-  :disabled
-  :ensure t
-  :pin melpa
-  :after go-mode
-  :init
-  (add-hook 'go-mode-hook
-	    (lambda ()
-              (company-mode 1)
-	      (ac-config-default))))
-
-;(require 'auto-complete-config)
-
-;(use-package auto-complete-config)
 
 ;; go get -u github.com/mdempsky/gocode
 ;; (not maintained anymore: github.com/nsf/gocode)
@@ -1018,6 +1028,12 @@
 ;; % mv gorename $HOME/bin/         # or elsewhere on $PATH
 (use-package go-rename
   :after go-mode)
+
+;; Go guru - integration of the Go 'guru' analysis tool
+;; https://github.com/dominikh/go-mode.el/blob/master/go-guru.el
+;; go get golang.org/x/tools/cmd/guru
+(use-package go-guru
+  :ensure t)
 
 ; Move point through buffer-undo-list positions.
 ; https://github.com/camdez/goto-last-change.el
@@ -1188,16 +1204,9 @@
 (use-package elpy
   :ensure t
   :init (with-eval-after-load 'python (elpy-enable))
-  :after smartparens
   :bind (:map elpy-mode-map
               ([f12] . elpy-shell-send-region-or-buffer)
-              ("M-." . elpy-goto-definition))
-  :config
-  (elpy-enable)
-  (add-hook 'python-mode-hook #'elpy-mode)
-  (add-hook 'python-mode-hook #'flycheck-mode)
-  (add-hook 'python-mode-hook #'smartparens-strict-mode))
-
+              ("M-." . elpy-goto-definition)))
 ;; Provides a minor-mode `yapf-mode` that turns on automatically
 ;; running YAPF on a buffer before saving
 ;; https://github.com/JorisE/yapfify
@@ -1244,7 +1253,12 @@
   :config
   (setq elfeed-feeds
         '(("https://blog.golang.org/feed.atom" go)
-          ("https://blog.cleancoder.com/atom.xml" swe))))
+          ("https://blog.cleancoder.com/atom.xml" swe)
+          ("https://batsov.com/atom.xml" swe)
+          ("https://metaredux.com/feed.xml" swe)
+          ("https://emacsredux.com/atom.xml" emacs)
+          ("https://quarkus.io/feed.xml" swe java quarkus)
+          ("http://www.howardism.org/index.xml" emacs))))
 
 ;; Enhance the user interface a little...
 ;; https://github.com/algernon/elfeed-goodies
@@ -1320,6 +1334,7 @@
 (use-package speed-type
   :defer t
   :pin melpa)
+
 
 (use-package autodisass-java-bytecode
   :ensure t
@@ -1594,6 +1609,7 @@
 ;; Imenu popup.
 ;; https://github.com/ancane/popup-imenu
 (use-package popup-imenu
+  :disabled
   :commands popup-imenu
   :bind (("M-i" . popup-imenu)
          :map popup-isearch-keymap
@@ -1607,13 +1623,14 @@
 (use-package multiple-cursors
   :ensure t
   :defer t
-  :bind (("C->"         . mc/mark-next-like-this)
-         ("C-<"         . mc/mark-previous-like-this)
-         ("C-c C-<"     . mc/mark-all-like-this)
-         ("C-c C->"     . mc/mark-all-like-this)
-         ("C-S-c C-S-c" . mc/edit-lines)
-         ("C-M->"       . mc/edit-ends-of-lines)
-         ("C-M-<"       . mc/edit-beginnings-of-lines)))
+  :bind (("C->"           . mc/mark-next-like-this)
+         ("C-<"           . mc/mark-previous-like-this)
+         ("C-c C-<"       . mc/mark-all-like-this)
+         ("C-c C->"       . mc/mark-all-like-this)
+         ("C-S-c C-S-c"   . mc/edit-lines)
+         ("C-M->"         . mc/edit-ends-of-lines)
+         ("C-M-<"         . mc/edit-beginnings-of-lines)
+         ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
 
 ;; Increase selected region by semantic units.
 ;; https://github.com/magnars/expand-region.el
@@ -1695,16 +1712,21 @@
   :config
   (winner-mode 1))
 
+;; Use el-get only for packages that are not available on melpa.
 (use-package el-get
   :ensure t
   :pin melpa
   :commands (el-get-bundle)
   :config
-  (el-get-bundle transponse-frames
-                 :url "https://raw.githubusercontent.com/emacsmirror/emacswiki.org/master/transpose-frame.el"))
+  ;; Provides some interactive functions which allows users to
+  ;; transpose windows arrangement in currently selected frame.
+  ;; https://www.emacswiki.org/emacs/TransposeFrame
+  (unless (featurep 'transpose-frame)
+    (el-get-bundle transponse-frame
+      :url "https://raw.githubusercontent.com/emacsmirror/emacswiki.org/master/transpose-frame.el")))
 
-;; Manage docker from Emacs.
-;; https://github.com/Silex/docker.el
+; Manage docker from Emacs.
+; https://github.com/Silex/docker.el
 (use-package docker
   :ensure t
   :config
@@ -1870,13 +1892,61 @@
 (use-package lsp-mode
   :ensure t
   :pin melpa
-  :commands lsp)
+  :commands (lsp lsp-deferred)
+  :diminish lsp-mode
+  :hook
+  (scala-mode  . lsp)
+  (elixir-mode . lsp)
+  (go-mode . lsp-deferred)
+  :init
+  (add-to-list 'exec-path "~/projects/foss/elixir-ls/release")
+  :config
+  ;(require 'lsp-clients)
+  (setq lsp-prefer-flymake nil))
+
+;; Set up before-save hooks to format buffer and add/delete imports.
+;; Make sure you don't have other gofmt/goimports hooks enabled.
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
 (use-package lsp-ui
   :ensure t
   :pin melpa
   :after lsp-mode
-  :commands lsp-ui-mode)
+  :commands lsp-ui-mode
+  :custom
+  ;; lsp-ui-doc
+  (lsp-ui-doc-enable nil)
+  (lsp-ui-doc-header t)
+  (lsp-ui-doc-include-signature nil)
+  (lsp-ui-doc-position 'at-point) ;; top, bottom, or at-point
+  (lsp-ui-doc-max-width 120)
+  (lsp-ui-doc-max-height 30)
+  (lsp-ui-doc-use-childframe t)
+  (lsp-ui-doc-use-webkit t)
+  ;; lsp-ui-imenu
+  (lsp-ui-imenu-enable t)
+  (lsp-ui-imenu-kind-position 'top)
+  :preface
+  (defun ladicle/toggle-lsp-ui-doc ()
+    (interactive)
+    (if lsp-ui-doc-mode
+        (progn
+          (lsp-ui-doc-mode -1)
+          (lsp-ui-doc--hide-frame))
+      (lsp-ui-doc-mode 1)))
+  :bind
+  (:map lsp-mode-map
+        ("C-c C-r" . lsp-ui-peek-find-references)
+        ("C-c C-j" . lsp-ui-peek-find-definitions)
+        ("C-c i"   . lsp-ui-peek-find-implementation)
+        ("C-c m"   . lsp-ui-imenu)
+        ("C-c s"   . lsp-ui-sideline-mode)
+        ("C-c d"   . ladicle/toggle-lsp-ui-doc))
+  :hook
+  (lsp-mode . lsp-ui-mode))
 
 (use-package company-lsp
   :ensure t
@@ -1924,7 +1994,8 @@
 ;; https://github.com/Alexander-Miller/treemacs
 (use-package treemacs
   :ensure t
-  :defer t)
+  :defer t
+  :pin melpa)
 
 (use-package treemacs-magit
   :ensure t
@@ -1936,7 +2007,11 @@
 ;;   :defer t
 ;;   :after (treemacs projectile))
 
+;; Elixir
 ;; https://github.com/elixir-editors/emacs-elixir
+;;
+;; Use LSP for advanced IDE features, see
+;; https://elixirforum.com/t/emacs-elixir-setup-configuration-wiki/19196
 (use-package elixir-mode
   :ensure t
   :defer t
@@ -1945,12 +2020,6 @@
   (add-hook 'elixir-mode-hook
 	    (lambda ()
 	      (smartparens-strict-mode 1))))
-
-;; Elixir tooling integration into Emacs
-;; https://alchemist.readthedocs.io
-(use-package alchemist
-  :ensure t
-  :defer t)
 
 (use-package git-gutter
   :ensure t
@@ -1965,7 +2034,8 @@
 	 ("C-x p" . git-gutter:previous-hunk)
 	 ("C-x n" . git-gutter:next-hunk))
   :init
-  (global-git-gutter-mode +1))
+  (global-git-gutter-mode +1)
+  :diminish git-gutter-mode)
 
 ;; https://github.com/Alexander-Miller/company-shell
 (use-package company-shell
@@ -1992,6 +2062,14 @@
          ("M-g f" . avy-goto-line)
          ("M-g w" . avy-goto-word-1)
          ("M-g e" . avy-goto-word-0)))
+
+;; Zap to char using `avy'.
+;; https://github.com/cute-jumper/avy-zap
+(use-package avy-zap
+  :ensure t
+  :pin melpa
+  :bind (("M-z" . avy-zap-to-char-dwim)
+         ("M-Z" . avy-zap-up-to-char-dwim)))
 
 ;; Fast, friendly searching with ripgrep and Emacs.
 ;; https://github.com/Wilfred/deadgrep
@@ -2021,6 +2099,7 @@
 ;; https://gitlab.com/flexw/mutt-mode
 (use-package mutt-mode
   :ensure t
+  :defer t
   :mode (("muttrc"  . mutt-mode)
          (".muttrc" . mutt-mode)))
 
@@ -2062,8 +2141,8 @@
   :ensure t
   :defer t
   :pin melpa
-  :init
-  (custom-set-variables '(terraform-indent-level 2)))
+  :custom
+  (terraform-indent-level 2))
 
 ;; Company backend for terraform files.
 ;; https://github.com/rafalcieslak/emacs-company-terraform
@@ -2074,7 +2153,7 @@
   :after (company-mode terraform-mode)
   :init
   (company-terraform-init)
-  (add-hook 'terraform-mode-hook #'company-mode))
+  :hook (terraform-mode . company-mode))
 
 ;; Documentation popup for company-mode.
 ;; https://github.com/expez/company-quickhelp
@@ -2121,8 +2200,9 @@
 ;; https://github.com/IvanMalison/org-projectile
 (use-package org-projectile
   :ensure t
-  :bind (("C-c n p" . org-projectile-project-todo-completing-read)
-         ("C-c c" . org-capture))
+  :bind (("C-c c"   . org-capture)
+         ("C-c p p" . org-projectile-project-todo-completing-read))
+
   :config
   (progn
     (setq org-projectile-projects-file
@@ -2137,14 +2217,206 @@
   :defer t
   :pin melpa)
 
+;; A minor-mode menu for the mode line that lists enabled minor-modes,
+;; as well as commonly but not currently enabled minor-modes. It can
+;; be used to toggle local and global minor-modes, to access
+;; mode-specific menus, and to get help about modes.
+;;
+;; https://github.com/tarsius/minions
 (use-package minions
   :ensure t
   :config
   (minions-mode 1))
 
-;; Display eldoc doc with contextual documentation overlay.
-;; https://github.com/stardiviner/eldoc-overlay
-(use-package eldoc-overlay
+;; Emacs minor mode to highlight mark(s).
+;; https://gitlab.com/iankelling/visible-mark
+(use-package visible-mark
   :ensure t
   :config
-  (global-eldoc-overlay-mode 1))
+  (global-visible-mark-mode 1))
+
+;; Ultra-minimalist presentation minor-mode for Emacs org-mode.
+;; https://github.com/rlister/org-present
+(use-package org-present
+  :ensure t
+  :defer t
+  :init
+  (eval-after-load "org-present"
+    '(progn
+       (add-hook #'org-present-mode-hook
+                 (lambda ()
+                   (org-present-big)
+                   (org-display-inline-images)
+                   (org-present-hide-cursor)
+                   (org-present-read-only)))
+       (add-hook #'org-present-mode-quit-hook
+                 (lambda ()
+                   (org-present-small)
+                   (org-remove-inline-images)
+                   (org-present-show-cursor)
+                   (org-present-read-write))))))
+
+;; Presentations in Emacs, based on Org-mode.
+;; https://github.com/eschulte/epresent
+(use-package epresent
+  :ensure t
+  :pin melpa)
+
+(use-package org-tree-slide
+  :ensure t
+  :pin melpa
+  :defer t
+  :bind (:map org-tree-slide-mode-map
+              ([f9]  . org-tree-slide-move-previous-tree)
+              ([f10] . org-tree-slide-move-next-tree)))
+
+;; Switch to larger font size for presentation and live coding.
+;; (Similar to presentation mode in IntelliJ.)
+;;
+;; https://github.com/zonuexe/emacs-presentation-mode
+(use-package presentation
+  :ensure t
+  :pin melpa
+  :bind ([f12] . presentation-mode))
+
+;; An emacs minor-mode for keeping paragraphs filled (in both
+;; comments and prose).
+;;
+;; https://github.com/davidshepherd7/aggressive-fill-paragraph-mode
+(use-package aggressive-fill-paragraph
+  :ensure t)
+
+;; Sidebar for Emacs leveraging Dired.
+;; https://github.com/jojojames/dired-sidebar
+(use-package dired-sidebar
+  :ensure t
+  :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
+  :commands (dired-sidebar-toggle-sidebar)
+  :init
+  (add-hook 'dired-sidebar-mode-hook
+            (lambda ()
+              (unless (file-remote-p default-directory)
+                (auto-revert-mode))))
+  :config
+  (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
+  (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
+
+  (customize-set-variable 'dired-sidebar-subtree-line-prefix "__")
+  (customize-set-variable 'dired-sidebar-theme 'all-the-icons)
+  (customize-set-variable 'dired-sidebar-use-term-integration t)
+  (customize-set-variable 'dired-sidebar-use-custom-font t))
+
+;; `direnv' integration for Emacs. `direnv' is an extension for your
+;; shell. It augments existing shells with a new feature that can load
+;; and unload environment variables depending on the current
+;; directory.
+;;
+;; https://github.com/wbolster/emacs-direnv
+(use-package direnv
+  :ensure t
+  :pin melpa
+  :config
+  (direnv-mode 1))
+
+;; Major-mode for editing web templates.
+;; http://web-mode.org/
+(use-package web-mode
+  :ensure t
+  :defer t
+  :pin melpa
+  :mode (("\\.phtml\\'"     . web-mode)
+         ("\\.tpl\\.php\\'" . web-mode)
+         ("\\.[agj]sp\\'"   . web-mode)
+         ("\\.as[cp]x\\'"   . web-mode)
+         ("\\.erb\\'"       . web-mode)
+         ("\\.mustache\\'"  . web-mode)
+         ("\\.djhtml\\'"    . web-mode))
+  :init
+  (setq web-mode-enable-current-element-highlight t)
+  (setq web-mode-enable-current-column-highlight t)
+  (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-enable-css-colorization t)
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (setq web-mode-ac-sources-alist
+                    '(("css"  . (ac-source-css-property))
+                      ("html" . (ac-source-words-in-buffer ac-source-abbrev)))))))
+
+;; Hop to any Emacs buffer in 2-3 key strokes.
+;; https://github.com/waymondo/frog-jump-buffer
+(use-package frog-jump-buffer
+  :ensure t
+  :commands (frog-jump-buffer frog-jump-buffer-other-window)
+  :bind (("C-x j" . frog-jump-buffer)
+         ("C-x J" . frog-jump-buffer-other-window)))
+
+;; Emacs minor mode for a nice writing environment.
+;; https://github.com/rnkn/olivetti
+(use-package olivetti
+  :ensure t
+  :defer t
+  :commands (olivetti-mode))
+
+;; Writeroom-mode: distraction-free writing for Emacs.
+;; https://github.com/joostkremers/writeroom-mode
+(use-package writeroom-mode
+  :ensure t
+  :defer t
+  :commands (writeroom-mode))
+
+;; Emacs Mode for Reddit - Read Reddit from within Emacs interactively.
+;; https://github.com/ahungry/md4rd
+(use-package md4rd
+  :ensure t
+  :defer t
+  :pin melpa
+  :commands (md4rd))
+
+;; ASCII Doc
+(use-package adoc-mode
+  :ensure t
+  :mode ("\\.txt" . adoc-mode))
+
+(setq sql-connection-alist
+      '((upds-local (sql-product 'postgres)
+                    (sql-port 5432)
+                    (sql-server "localhost")
+                    (sql-user "postgres")
+                    (sql-password "P@ssw0rd")
+                    (sql-database "postgres"))))
+
+;; Ivy/Counsel integration for all-the-icons.el
+;; https://github.com/asok/all-the-icons-ivy
+(use-package all-the-icons-ivy
+  :disabled
+  :ensure t
+  :init
+  (add-hook 'after-init-hook 'all-the-icons-ivy-setup))
+
+;; Flycheck — Syntax checking for GNU Emacs
+;; https://www.flycheck.org
+;; https://github.com/flycheck/flycheck
+(use-package flycheck
+  :ensure t
+  :pin melpa
+  :init (global-flycheck-mode))
+
+(provide 'init)
+;;; init.el ends here
+
+; Save and restore frame and window configurations.
+; https://github.com/alphapapa/burly.el
+;;(use-package burly
+;;  :quelpa (burly :fetcher github :repo "alphapapa/burly.el"))
+
+
+; Terminal emulator inside GNU Emacs based on libvterm.
+; https://github.com/akermu/emacs-libvterm
+(use-package vterm
+  :ensure t
+  :pin melpa)
+
+(use-package beacon
+  :ensure t
+  :init
+  (beacon-mode 1))

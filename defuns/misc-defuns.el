@@ -1,8 +1,11 @@
-(defun show-file-name ()
-  "Show the full path file name in the minibuffer."
+(defun show-current-buffer-file-name ()
+  "Show the absolute path of the file in the current buffer."
   (interactive)
-  (message (buffer-file-name))
-  (kill-new (file-truename buffer-file-name)))
+  (if buffer-file-name
+      (let ((file-name (file-truename buffer-file-name)))
+        (message file-name)
+        (kill-new file-name))
+    (message "*** Buffer does not have a file ***")))
 
 ;; open PHP manual with lynx, other URLs in Firefox
 (defun browse-url-choose-browser (url &optional new-buffer)
@@ -135,7 +138,7 @@
                           (projectile-switch-project-by-name project))))))
 
 (defun my/unix-timestamp-to-date ()
-  "Prompts for a unix epoch time stamp and converts it to a human-readable date"
+  "Prompts for a unix epoch time stamp and converts it to a human-readable date."
   (interactive)
   (let* ((time-zone "UTC")
          (time-unix (seconds-to-time (read-number "Unix epoch time stamp: ")))
@@ -144,7 +147,10 @@
 
 
 ;; Source: https://stackoverflow.com/questions/9656311/conflict-resolution-with-emacs-ediff-how-can-i-take-the-changes-of-both-version/29757750#29757750
+(defvar ediff-current-difference)
+(defvar ediff-control-buffer)
 (defun ediff-copy-both-to-C ()
+  "Copies the changes from both diff buffers A and B into the result buffer C."
   (interactive)
   (ediff-copy-diff ediff-current-difference nil 'C nil
                    (concat
@@ -169,3 +175,12 @@
         (around ediff-toggle-frame-fullscreen activate)
         (toggle-frame-fullscreen (window-frame ediff-window-A))
         (raise-frame ediff-control-frame))))
+
+;; Sorts the variable containing the selected packages alphabetically
+;; and adds the result to the kill-ring, so that it can be pasted back
+;; into custom.el. Reasoning: Keeping the list sorted makes it easier
+;; to resolve merge conflicts in custom.el. (Works for now, but
+;; ideally it would be sorted automatically upon save.)
+(defun sort-selected-packages-and-add-to-kill-ring ()
+  (interactive)
+  (kill-new (format "%s" (cl-sort package-selected-packages 'string-lessp))))

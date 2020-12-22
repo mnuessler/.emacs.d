@@ -1,26 +1,10 @@
 *~
 \#*#
-/.places
-/site-lisp/.thesaurus.cache
-/url/cookies
-/semanticdb
-/tramp
-/ac-comphist.dat
-/elpa
+/elpa/
+/el-get/
 
 /.cask/
-/.python-environments/
-/eshell/
-/session.*
-/persp-confs
-/bookmarks
-/projectile-bookmarks.eld
-/recentf
-/meghanada
-/network-security.data
-/.edbi-ds-history
-/image-dired
 
 # Here, no-litterling.el keeps all the stuff.
 # https://github.com/emacscollective/no-littering
-/var
+/var/
