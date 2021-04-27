@@ -92,6 +92,20 @@
 
 (require 'appearance)
 
+;; Always downloaded used packages automatically.
+;; (require 'use-package-ensure)
+;; (setq use-package-always-ensure t)
+
+;; Keep packages up-to-date.
+;; https://github.com/rranelli/auto-package-update.el
+;; (use-package auto-package-update
+;;   :ensure t
+;;   :pin melpa-stable
+;;   :config
+;;   (setq auto-package-update-delete-old-versions t)
+;;   (setq auto-package-update-hide-results t)
+;;   (auto-package-update-maybe))
+
 (use-package diminish
   :ensure t)
 
@@ -143,13 +157,21 @@
         recentf-auto-cleanup 'never)
   ;; Exclude some things from the list. Do "M-x recentf-cleanup"
   ;; for changes to take effect immediately.
-  (add-to-list 'recentf-exclude no-littering-var-directory)
-  (add-to-list 'recentf-exclude no-littering-etc-directory)
-  (add-to-list 'recentf-exclude "^/var/folders\\.*")
-  (add-to-list 'recentf-exclude "COMMIT_EDITMSG\\'")
-  (add-to-list 'recentf-exclude "-autoloads\\.el\\'")
-  (add-to-list 'recentf-exclude "\\.signature\\'")
-  (add-to-list 'recentf-exclude (expand-file-name "elpa/" dotfiles-dir))
+  (mapc (apply-partially 'add-to-list 'recentf-exclude)
+        (list no-littering-var-directory
+              no-littering-etc-directory
+              "^/var/folders\\.*"
+              "COMMIT_EDITMSG\\'"
+              "-autoloads\\.el\\'"
+              "\\.signature\\'"
+              (expand-file-name "elpa/" dotfiles-dir)))
+  ;; (add-to-list 'recentf-exclude no-littering-var-directory)
+  ;; (add-to-list 'recentf-exclude no-littering-etc-directory)
+  ;; (add-to-list 'recentf-exclude "^/var/folders\\.*")
+  ;; (add-to-list 'recentf-exclude "COMMIT_EDITMSG\\'")
+  ;; (add-to-list 'recentf-exclude "-autoloads\\.el\\'")
+  ;; (add-to-list 'recentf-exclude "\\.signature\\'")
+  ;; (add-to-list 'recentf-exclude (expand-file-name "elpa/" dotfiles-dir))
   (recentf-mode +1))
 
 ;; Get side-by-side diffs
@@ -1038,6 +1060,7 @@
 ; Move point through buffer-undo-list positions.
 ; https://github.com/camdez/goto-last-change.el
 (use-package goto-last-change
+  :ensure t
   :commands (goto-last-change)
   :bind ("C-x C-\\" . goto-last-change))
 
@@ -2387,11 +2410,11 @@
 
 ;; Ivy/Counsel integration for all-the-icons.el
 ;; https://github.com/asok/all-the-icons-ivy
-(use-package all-the-icons-ivy
-  :disabled
-  :ensure t
-  :init
-  (add-hook 'after-init-hook 'all-the-icons-ivy-setup))
+;; (use-package all-the-icons-ivy
+;;   :disabled
+;;   :ensure t
+;;   :init
+;;   (add-hook 'after-init-hook 'all-the-icons-ivy-setup))
 
 ;; Flycheck — Syntax checking for GNU Emacs
 ;; https://www.flycheck.org
@@ -2420,3 +2443,17 @@
   :ensure t
   :init
   (beacon-mode 1))
+
+;; Display icons for all buffers in ivy.
+;; https://github.com/seagle0128/all-the-icons-ivy-rich
+(use-package all-the-icons-ivy-rich
+  :ensure t
+  :pin melpa
+  :init (all-the-icons-ivy-rich-mode 1))
+
+;; More friendly interface for ivy
+;; https://github.com/Yevgnen/ivy-rich
+(use-package ivy-rich
+  :ensure t
+  :pin melpa
+  :init (ivy-rich-mode 1))

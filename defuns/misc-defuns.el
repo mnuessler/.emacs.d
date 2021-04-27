@@ -34,6 +34,7 @@
       (gnome-open-file (file)))))
 
 (defun json-format-py ()
+  "Format JSON (using Python)."
   (interactive)
   (save-excursion
     (shell-command-on-region (mark) (point) "python -m json.tool" (buffer-name) t)))
@@ -44,6 +45,7 @@
 ;; - `brew install node'
 ;; - `npm install -g underscore-cli'
 (defun json-format-underscore ()
+  "Format JSON (using underscore)."
   (interactive)
   (save-excursion
     (shell-command-on-region (mark) (point) "underscore pretty" (buffer-name) t)))
@@ -169,6 +171,7 @@
 ; ediff-toggle-wide-display tries to use the entire display width,
 ; which breaks with multiple monitors
 (defun ediff-fullscreen-as-wide-display ()
+  "Try to use the entire display width, which breaks with multiple monitors."
   (interactive)
   (if (eq window-system 'mac)
       (defadvice ediff-toggle-wide-display
@@ -184,3 +187,8 @@
 (defun sort-selected-packages-and-add-to-kill-ring ()
   (interactive)
   (kill-new (format "%s" (cl-sort package-selected-packages 'string-lessp))))
+
+(defun insert-current-date ()
+  "Insert the current date (i.e. '2021-02-03')."
+  (interactive)
+  (insert (shell-command-to-string "echo -n $(date +%Y-%m-%d)")))

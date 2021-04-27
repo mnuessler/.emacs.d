@@ -38,7 +38,7 @@
    '("f5512c02e0a6887e987a816918b7a684d558716262ac7ee2dd0437ab913eaec6" default))
  '(dired-sidebar-subtree-line-prefix "__")
  '(ediff-show-ancestor t)
- '(ediff-split-window-function 'split-window-horizontally)
+ '(ediff-split-window-function 'split-window-horizontally t)
  '(ediff-window-setup-function 'ediff-setup-windows-plain)
  '(elfeed-goodies/entry-pane-position 'bottom)
  '(elpy-rpc-python-command "python3")
@@ -81,7 +81,7 @@
  '(org-modules
    '(org-bbdb org-bibtex org-docview org-eww org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m))
  '(package-selected-packages
-   '(beacon csv-mode vterm x509-mode flycheck-mypy all-the-icons-ivy adoc-mode md4rd dired+ writeroom-mode olivetti flycheck-rust eglot company-tern frog-jump-buffer aggressive-fill-paragraph avy-zap dired-sidebar direnv epresent markdown-mode meghanada minions mu4e-maildirs-extension multiple-cursors mutt-mode neotree nginx-mode no-littering nyan-mode ob-elixir ob-go ob-http ob-ipython ob-mongo ob-prolog ob-redis ob-restclient ob-rust ob-sql-mode ob-swift org org-bookmark-heading org-present org-presie org-projectile org-tree-slide persistent-scratch persp-mode persp-mode-projectile-bridge php-mode plantuml-mode powerline presentation projectile prolog protobuf-mode racer rainbow-delimiters realgud robe rubocop rust-mode rvm sbt-mode scala-mode shell-pop shm slack smart-mode-line smart-mode-line-powerline-theme smartparens smartparens-mode smooth-scrolling speed-type ssh-config-mode ssh-tunnels string-edit swift-mode terminal-here terraform-mode toml-mode treemacs treemacs-magit undo-tree use-package visible-mark web-mode which-key window-numbering xkcd yaml-mode yapfify yasnippet yasnippet-snippets zeal-at-point zenburn-theme zencoding-mode))
+   '(bazel-mode uuidgen all-the-icons-ivy-rich ivy-rich yaml-imenu ox-reveal htmlize edbi flymake-shell flymake-ruby auctex haskell-mode ereader jira-markup-mode flycheck-swift gist ac-octave prolog-mode hacker-typer crontab-mode apache-mode ac-php dired-x dired ace-flyspell auto-package-update goto-last-change beacon csv-mode vterm x509-mode flycheck-mypy adoc-mode md4rd dired+ writeroom-mode olivetti flycheck-rust eglot company-tern frog-jump-buffer aggressive-fill-paragraph avy-zap dired-sidebar direnv epresent markdown-mode meghanada minions mu4e-maildirs-extension multiple-cursors mutt-mode neotree nginx-mode no-littering nyan-mode ob-elixir ob-go ob-http ob-ipython ob-mongo ob-prolog ob-redis ob-restclient ob-rust ob-sql-mode ob-swift org org-bookmark-heading org-present org-presie org-projectile org-tree-slide persistent-scratch persp-mode persp-mode-projectile-bridge php-mode plantuml-mode powerline presentation projectile prolog protobuf-mode racer rainbow-delimiters realgud robe rubocop rust-mode rvm sbt-mode scala-mode shell-pop shm slack smart-mode-line smart-mode-line-powerline-theme smartparens smartparens-mode smooth-scrolling speed-type ssh-config-mode ssh-tunnels string-edit swift-mode terminal-here terraform-mode toml-mode treemacs treemacs-magit undo-tree use-package visible-mark web-mode which-key window-numbering xkcd yaml-mode yapfify yasnippet yasnippet-snippets zeal-at-point zenburn-theme zencoding-mode))
  '(plantuml-server-url "https://www.plantuml.com/pte")
  '(projectile-globally-ignored-directories
    '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" ".elixir-ls"))
@@ -98,7 +98,7 @@
  '(shell-pop-window-position "bottom")
  '(show-paren-mode t)
  '(sql-mysql-options '("--protocol=tcp"))
- '(terraform-indent-level 2 t)
+ '(terraform-indent-level 2)
  '(whitespace-style '(trailing space-before-tab empty))
  '(yas-snippet-dirs
    '("~/.emacs.d/elpa/yasnippet-0.13.0/snippets" "/home/matthias/.emacs.d/snippets" "/home/matthias/.emacs.d/elpa/ansible-20170926.1951/snippets")))

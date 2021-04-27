@@ -66,12 +66,12 @@
     (local-set-key "\C-m" x)))
 
 (defun kill-start-of-line ()
-  "Kill from point to start of line"
+  "Kill from point to start of line."
   (interactive)
   (kill-line 0))
 
 (defun normalize-space-in-region (beg end)
-  "replace all whitespace in the region with single spaces"
+  "Replace all whitespace in the region from BEG to END with single spaces."
   (interactive "r")
   (save-excursion
     (save-restriction
@@ -108,18 +108,18 @@ point reaches the beginning or end of the buffer, stop there."
 ;; URL-encode/-decode region
 ;; (from http://stackoverflow.com/questions/611831/how-to-url-decode-a-string-in-emacs-lisp)
 (defun func-region (start end func)
-  "run a function over the region between START and END in current buffer."
+  "Execute function FUNC over the region between START and END in current buffer."
   (save-excursion
     (let ((text (delete-and-extract-region start end)))
       (insert (funcall func text)))))
 
 (defun urlencode-region (start end)
-  "urlencode the region between START and END in current buffer."
+  "URL-encode the region between START and END in current buffer."
   (interactive "r")
   (func-region start end #'url-hexify-string))
 
 (defun urldecode-region (start end)
-  "de-urlencode the region between START and END in current buffer."
+  "URL-decode the region between START and END in current buffer."
   (interactive "r")
   (func-region start end #'url-unhex-string))
 
@@ -127,9 +127,11 @@ point reaches the beginning or end of the buffer, stop there."
 ;; Kills text upto and excluding the specified character.
 ;; Taken from the sample chapter of the `Emacs Mastery' book.
 (defun zap-upto-char (arg char)
-  "Kill up to but not including ARGth occurrence of CHAR. Case is
-ignored if `case-fold-search' is non-nil in the current buffer.
-Goes backward if ARG is negative; error if CHAR not found."
+  "Kill up to but not including ARGth occurrence of CHAR.
+
+Case is ignored if `case-fold-search' is non-nil in the current
+buffer.  Goes backward if ARG is negative; error if CHAR not
+found."
   (interactive
    (list (prefix-numeric-value current-prefix-arg)
          (read-char "Zap upto char: " t)))
@@ -146,12 +148,14 @@ Goes backward if ARG is negative; error if CHAR not found."
        (move-to-column column))))
 
 (defun move-line-up ()
+  "Move the current line up."
   (interactive)
   (save-column
     (transpose-lines 1)
     (forward-line -2)))
 
 (defun move-line-down ()
+  "Move the current line down."
   (interactive)
   (save-column
     (forward-line 1)
@@ -160,13 +164,14 @@ Goes backward if ARG is negative; error if CHAR not found."
 
 ;; Duplicate line
 (defun duplicate-line()
+  "Duplicate the current line."
   (interactive)
   (save-column
    (move-beginning-of-line 1)
    (kill-line)
    (yank)
    (open-line 1)
-   (next-line 1)
+   (forward-line 1)
    (yank)))
 
 ;; Switch focus to minibuffer window.
